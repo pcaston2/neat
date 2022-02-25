@@ -1,10 +1,9 @@
-import 'package:neat/neuronInnovation.dart';
 import 'package:test/test.dart';
 import 'package:neat/phenotype.dart';
 
 void main() {
   test('Create a new phenotype', () {
-    Phenotype p = new Phenotype(1,1);
+    Phenotype p = Phenotype(1,1);
     expect(p.innovations.length, equals(3));
 
     var bias = p.biasNeurons().single;
