@@ -1,5 +1,0 @@
-library neat;
-
-class Gene {
-  
-}
