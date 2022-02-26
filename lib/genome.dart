@@ -12,16 +12,16 @@ class Genome {
   Genome(this.inputs, this.outputs) {
     int innovationIdentifier = 0;
     List<Neuron> allInputs = <Neuron>[];
-    allInputs.add(new BiasNeuron(innovationIdentifier++));
+    allInputs.add(BiasNeuron(innovationIdentifier++));
     for (int i=0; i<inputs; i++) {
-      var input = new InputNeuron(innovationIdentifier++);
+      var input = InputNeuron(innovationIdentifier++);
       input.y = 0;
       allInputs.add(input);
     }
 
     List<Neuron> allOutputs = <Neuron>[];
     for (int i=0; i<outputs; i++) {
-      var output = new OutputNeuron(innovationIdentifier++);
+      var output = OutputNeuron(innovationIdentifier++);
       output.y = 1;
       allOutputs.add(output);
     }
@@ -48,31 +48,50 @@ class Genome {
     genes.addAll(allOutputs);
   }
 
-  neurons() =>
+  get neurons =>
       genes.whereType<Neuron>();
 
-  inputNeurons() =>
+  get inputNeurons =>
       genes.whereType<InputNeuron>();
 
-  outputNeurons() =>
+  get outputNeurons =>
       genes.whereType<OutputNeuron>();
 
-  biasNeurons() =>
+  get biasNeurons =>
       genes.whereType<BiasNeuron>();
 
-  hiddenNeurons() =>
+  get hiddenNeurons =>
       genes.whereType<HiddenNeuron>();
 
-  links() =>
+  get links =>
       genes.whereType<Link>();
 
-  loops() =>
+  get loops =>
       genes.whereType<LoopLink>();
 
-  Link AddLink(Neuron from, Neuron to) {
+  Link addLink(Neuron from, Neuron to) {
+    if (from == to) {
+      throw ArgumentError("Looped Links should be created by calling AddLoopLink");
+    }
     var newLink = Link(from, to);
     newLink.geneIdentifier = "(${from.geneIdentifier},${to.geneIdentifier})";
     genes.add(newLink);
     return newLink;
+  }
+
+  LoopLink addLoopLink(Neuron loop) {
+    var newLoopLink = new LoopLink(loop);
+    newLoopLink.geneIdentifier = "(${loop.geneIdentifier},${loop.geneIdentifier})";
+    genes.add(newLoopLink);
+    return newLoopLink;
+  }
+
+  HiddenNeuron addNeuron(Link link) {
+    if (link is LoopLink) {
+      throw ArgumentError("Cannot add a neuron to a looped link");
+    }
+    var newNeuron = HiddenNeuron(link);
+    genes.add(newNeuron);
+    return newNeuron;
   }
 }
