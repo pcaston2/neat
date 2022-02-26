@@ -1,12 +1,34 @@
-library neat;
+import 'gene.dart';
 
-class Neuron {
-  num activationResponse;
 
-  Neuron(this.activationResponse);
 
-  //defined as having a recurrent loop
-  bool get recurrent {
-    throw new UnimplementedError();
+abstract class Neuron implements Gene {
+  num x = 0;
+  num y = 0;
+  @override
+  late String geneIdentifier;
+
+  Neuron(int geneIdentifier) {
+    this.geneIdentifier = geneIdentifier.toString();
   }
+}
+
+class BiasNeuron extends Neuron {
+  BiasNeuron(int innovationIdentifier) : super(innovationIdentifier);
+
+}
+
+class InputNeuron extends Neuron {
+  InputNeuron(int innovationIdentifier) : super(innovationIdentifier);
+
+}
+
+class OutputNeuron extends Neuron {
+  OutputNeuron(int innovationIdentifier) : super(innovationIdentifier);
+
+}
+
+class HiddenNeuron extends Neuron {
+  HiddenNeuron(int innovationIdentifier) : super(innovationIdentifier);
+
 }

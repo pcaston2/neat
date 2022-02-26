@@ -1,18 +1,15 @@
-library neat;
+import 'package:neat/neuron.dart';
 
+import 'gene.dart';
 import 'neuron.dart';
-import 'innovation.dart';
 
-class Link {
+class Link extends Gene {
   Neuron from;
   Neuron to;
-  num weight;
-  bool enabled;
-  Innovation innovation;
 
-  bool get recurrent {
-    return from == to;
-  }
+  Link(this.from, this.to);
+}
 
-  Link(this.innovation, this.from, this.to, this.weight, this.enabled);
+class LoopLink extends Link {
+  LoopLink(Neuron recurrent) : super(recurrent, recurrent);
 }
