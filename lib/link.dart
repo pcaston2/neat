@@ -7,7 +7,7 @@ class Link extends Gene {
   Neuron from;
   Neuron to;
   Link(this.from, this.to) {
-    geneDepth = max(this.from.geneDepth, this.to.geneDepth) + 1;
+    geneDepth = max(from.geneDepth, to.geneDepth) + 1;
   }
 
   get recurrent =>

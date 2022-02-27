@@ -34,7 +34,8 @@ class OutputNeuron extends Neuron {
 }
 
 class HiddenNeuron extends Neuron {
-  HiddenNeuron(Link link) : super() {
+  Link link;
+  HiddenNeuron(this.link) : super() {
     geneIdentifier = "{${link.from.geneIdentifier},${link.to.geneIdentifier}}";
     geneDepth = link.geneDepth + 1;
     x = (link.from.x + link.to.x) / 2;

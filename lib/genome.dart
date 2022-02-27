@@ -13,14 +13,14 @@ class Genome {
     int innovationIdentifier = 0;
     List<Neuron> allInputs = <Neuron>[];
     allInputs.add(BiasNeuron(innovationIdentifier++));
-    for (int i=0; i<inputs; i++) {
+    for (int i = 0; i < inputs; i++) {
       var input = InputNeuron(innovationIdentifier++);
       input.y = 0;
       allInputs.add(input);
     }
 
     List<Neuron> allOutputs = <Neuron>[];
-    for (int i=0; i<outputs; i++) {
+    for (int i = 0; i < outputs; i++) {
       var output = OutputNeuron(innovationIdentifier++);
       output.y = 1;
       allOutputs.add(output);
@@ -71,7 +71,11 @@ class Genome {
 
   Link addLink(Neuron from, Neuron to) {
     if (from == to) {
-      throw ArgumentError("Looped Links should be created by calling AddLoopLink");
+      throw ArgumentError(
+          "Looped Links should be created by calling AddLoopLink");
+    }
+    if (hasLink(from, to)) {
+      throw ArgumentError("This link already exists");
     }
     var newLink = Link(from, to);
     newLink.geneIdentifier = "(${from.geneIdentifier},${to.geneIdentifier})";
@@ -79,11 +83,26 @@ class Genome {
     return newLink;
   }
 
+  bool hasLink(Neuron from, Neuron to) {
+    return links.any((l) => l.from == from && l.to == to);
+  }
+
   LoopLink addLoopLink(Neuron loop) {
-    var newLoopLink = new LoopLink(loop);
-    newLoopLink.geneIdentifier = "(${loop.geneIdentifier},${loop.geneIdentifier})";
+    if (loop is BiasNeuron) {
+      throw ArgumentError("Cannot have a loop on a bias neuron");
+    }
+    if (loop is InputNeuron) {
+      throw ArgumentError("Cannot have a loop on an input neuron");
+    }
+    var newLoopLink = LoopLink(loop);
+    newLoopLink.geneIdentifier =
+    "(${loop.geneIdentifier},${loop.geneIdentifier})";
     genes.add(newLoopLink);
     return newLoopLink;
+  }
+
+  bool hasLoopLink(Neuron loop) {
+    return loops.any((l) => l.from == loop);
   }
 
   HiddenNeuron addNeuron(Link link) {
@@ -93,5 +112,9 @@ class Genome {
     var newNeuron = HiddenNeuron(link);
     genes.add(newNeuron);
     return newNeuron;
+  }
+
+  bool hasNeuron(Link link) {
+    return hiddenNeurons.any((n) => n.link == link);
   }
 }
