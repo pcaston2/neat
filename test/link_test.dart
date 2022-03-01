@@ -11,10 +11,10 @@ void main() {
       //Act
       var link = g.addLink(input, output);
       //Assert
-      expect(link.geneIdentifier, equals("(1,2)"));
+      expect(link.identifier, equals("(1,2)"));
       expect(link.recurrent, isFalse);
       expect(g.genes, contains(link));
-      expect(link.geneDepth, equals(1));
+      expect(link.depth, equals(1));
     });
 
     test('should not detect', () {
@@ -48,44 +48,95 @@ void main() {
       //Act
       var recurrentLink = g.addLink(output, input);
       //Assert
-      expect(recurrentLink.geneIdentifier, equals("(2,1)"));
+      expect(recurrentLink.identifier, equals("(2,1)"));
       expect(recurrentLink.recurrent, isTrue);
       expect(g.genes, contains(recurrentLink));
-      expect(recurrentLink.geneDepth, equals(1));
+      expect(recurrentLink.depth, equals(1));
     });
 
-    test('should add loop', () {
+    test('should find possible', () {
       //Arrange
       Genome g = Genome(0, 1);
+      var bias = g.biasNeuron;
       var output = g.outputNeurons.single;
       //Act
-      var loopLink = g.addLoopLink(output);
+      var possibleLinks = g.possibleLinks;
       //Assert
-      expect(loopLink.geneIdentifier, equals("(1,1)"));
-      expect(g.genes, contains(loopLink));
-      expect(loopLink.recurrent, isTrue);
-      expect(loopLink.geneDepth, equals(1));
+      expect(possibleLinks, hasLength(2));
+      expect(possibleLinks.where((l) => l.from == bias && l.to == output),isNotEmpty);
     });
 
-    test('should detect loop', () {
+    test('should not find possible', () {
       //Arrange
       Genome g = Genome(0, 1);
+      var bias = g.biasNeuron;
       var output = g.outputNeurons.single;
-      g.addLoopLink(output);
+      g.addLink(bias, output);
       //Act
-      var hasLink = g.hasLoopLink(output);
+      var possibleLinks = g.possibleLinks;
       //Assert
-      expect(hasLink, isTrue);
+      expect(possibleLinks.where((l) => l.from == bias && l.to == output),isEmpty);
     });
 
-    test('should not detect loop', () {
-      //Arrange
-      Genome g = Genome(0, 1);
-      var output = g.outputNeurons.single;
-      //Act
-      var hasLink = g.hasLoopLink(output);
-      //Assert
-      expect(hasLink, isFalse);
+    group('Loop', () {
+
+      test('should add loop', () {
+        //Arrange
+        Genome g = Genome(0, 1);
+        var output = g.outputNeurons.single;
+        //Act
+        var loopLink = g.addLoopLink(output);
+        //Assert
+        expect(loopLink.identifier, equals("(1,1)"));
+        expect(g.genes, contains(loopLink));
+        expect(loopLink.recurrent, isTrue);
+        expect(loopLink.depth, equals(1));
+      });
+
+      test('should detect loop', () {
+        //Arrange
+        Genome g = Genome(0, 1);
+        var output = g.outputNeurons.single;
+        g.addLoopLink(output);
+        //Act
+        var hasLink = g.hasLoopLink(output);
+        //Assert
+        expect(hasLink, isTrue);
+      });
+
+      test('should not detect loop', () {
+        //Arrange
+        Genome g = Genome(0, 1);
+        var output = g.outputNeurons.single;
+        //Act
+        var hasLink = g.hasLoopLink(output);
+        //Assert
+        expect(hasLink, isFalse);
+      });
+
+      test('should find possible', () {
+        //Arrange
+        Genome g = Genome(0, 1);
+        var output = g.outputNeurons.single;
+        //Act
+        var possibleLinks = g.possibleLoopLink;
+        //Assert
+        expect(possibleLinks, hasLength(1));
+        expect(possibleLinks,contains(output));
+      });
+
+      test('should find possible', () {
+        //Arrange
+        Genome g = Genome(0, 1);
+        var output = g.outputNeurons.single;
+        g.addLoopLink(output);
+        //Act
+        var possibleLinks = g.possibleLoopLink;
+        //Assert
+        expect(possibleLinks, isEmpty);
+      });
+
     });
+
   });
 }

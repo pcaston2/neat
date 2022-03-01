@@ -12,7 +12,7 @@ class Genome {
   Genome(this.inputs, this.outputs) {
     int innovationIdentifier = 0;
     List<Neuron> allInputs = <Neuron>[];
-    allInputs.add(BiasNeuron(innovationIdentifier++));
+    allInputs.add(NeuronBias.index(innovationIdentifier++));
     for (int i = 0; i < inputs; i++) {
       var input = InputNeuron(innovationIdentifier++);
       input.y = 0;
@@ -48,22 +48,22 @@ class Genome {
     genes.addAll(allOutputs);
   }
 
-  get neurons =>
+  Iterable<Neuron> get neurons =>
       genes.whereType<Neuron>();
 
-  get inputNeurons =>
+  Iterable<InputNeuron> get inputNeurons =>
       genes.whereType<InputNeuron>();
 
-  get outputNeurons =>
+  Iterable<OutputNeuron> get outputNeurons =>
       genes.whereType<OutputNeuron>();
 
-  get biasNeurons =>
-      genes.whereType<BiasNeuron>();
+  NeuronBias get biasNeuron =>
+      genes.whereType<NeuronBias>().single;
 
-  get hiddenNeurons =>
+  Iterable<HiddenNeuron> get hiddenNeurons =>
       genes.whereType<HiddenNeuron>();
 
-  get links =>
+  Iterable<Link> get links =>
       genes.whereType<Link>();
 
   get loops =>
@@ -78,7 +78,7 @@ class Genome {
       throw ArgumentError("This link already exists");
     }
     var newLink = Link(from, to);
-    newLink.geneIdentifier = "(${from.geneIdentifier},${to.geneIdentifier})";
+    newLink.identifier = "(${from.identifier},${to.identifier})";
     genes.add(newLink);
     return newLink;
   }
@@ -87,22 +87,52 @@ class Genome {
     return links.any((l) => l.from == from && l.to == to);
   }
 
+  List<Link> get possibleLinks {
+    var results = <Link>[];
+    for(var from in neurons) {
+      for (var to in neurons) {
+        if (from == to) {
+          continue;
+        }
+        if (hasLink(from, to)) {
+          continue;
+        }
+        results.add(Link(from, to));
+      }
+    }
+    return results;
+  }
+
   LoopLink addLoopLink(Neuron loop) {
-    if (loop is BiasNeuron) {
+    if (loop is NeuronBias) {
       throw ArgumentError("Cannot have a loop on a bias neuron");
     }
     if (loop is InputNeuron) {
       throw ArgumentError("Cannot have a loop on an input neuron");
     }
     var newLoopLink = LoopLink(loop);
-    newLoopLink.geneIdentifier =
-    "(${loop.geneIdentifier},${loop.geneIdentifier})";
+    newLoopLink.identifier =
+    "(${loop.identifier},${loop.identifier})";
     genes.add(newLoopLink);
     return newLoopLink;
   }
 
   bool hasLoopLink(Neuron loop) {
     return loops.any((l) => l.from == loop);
+  }
+
+  List<Neuron> get possibleLoopLink {
+    var results = <Neuron>[];
+    for(var n in neurons) {
+      if (!n.canLoop) {
+        continue;
+      }
+      if (hasLoopLink(n)) {
+        continue;
+      }
+      results.add(n);
+    }
+    return results;
   }
 
   HiddenNeuron addNeuron(Link link) {
@@ -114,7 +144,26 @@ class Genome {
     return newNeuron;
   }
 
+  HiddenNeuron addNeuronWithLinks(Link link) {
+    var neuron = addNeuron(link);
+    link.enabled = false;
+    addLink(link.from, neuron);
+    var toLink = addLink(neuron, link.to);
+    toLink.weight = link.weight;
+    return neuron;
+  }
+
   bool hasNeuron(Link link) {
     return hiddenNeurons.any((n) => n.link == link);
+  }
+
+  List<Link> get possibleNeurons {
+    var results = <Link>[];
+    for(var l in links) {
+      if (!hasNeuron(l)) {
+        results.add(l);
+      }
+    }
+    return results;
   }
 }

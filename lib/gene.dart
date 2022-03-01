@@ -1,7 +1,7 @@
 library neat;
 
 abstract class Gene {
-  late String geneIdentifier;
-  late int geneDepth;
+  late String identifier;
+  late int depth;
 }
 

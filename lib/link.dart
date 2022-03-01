@@ -3,15 +3,21 @@ import 'gene.dart';
 import 'neuron.dart';
 import 'dart:math';
 
-class Link extends Gene {
+abstract class ALink extends Gene {
   Neuron from;
   Neuron to;
-  Link(this.from, this.to) {
-    geneDepth = max(from.geneDepth, to.geneDepth) + 1;
+  num weight = 1;
+  bool enabled = true;
+  ALink(this.from, this.to) {
+    depth = max(from.depth, to.depth) + 1;
   }
 
   get recurrent =>
       from.y >= to.y;
+}
+
+class Link extends ALink {
+  Link(from, to) : super (from, to);
 }
 
 class LoopLink extends Link {

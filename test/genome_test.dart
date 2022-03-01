@@ -9,7 +9,7 @@ void main() {
     test('should be created', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var bias = g.biasNeurons.single;
+      var bias = g.biasNeuron;
       var input = g.inputNeurons.single;
       var output = g.outputNeurons.single;
       //Assert
@@ -20,10 +20,10 @@ void main() {
       expect(input.y, equals(0));
       expect(output.x, equals(0.5));
       expect(output.y, equals(1));
-      expect(bias.geneIdentifier, equals("0"));
-      expect(input.geneIdentifier, equals("1"));
-      expect(output.geneIdentifier, equals("2"));
-      expect(g.genes, everyElement((gene) => gene.geneDepth == 0));
+      expect(bias.identifier, equals("0"));
+      expect(input.identifier, equals("1"));
+      expect(output.identifier, equals("2"));
+      expect(g.genes, everyElement((gene) => gene.depth == 0));
     });
 
 
