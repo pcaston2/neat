@@ -1,8 +1,7 @@
 name: neat
 description: A new Flutter package project.
 version: 0.0.1
-homepage:
-  http://wwww.google.com
+homepage: http://wwww.google.com
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
