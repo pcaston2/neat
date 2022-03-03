@@ -1,25 +1,11 @@
-import 'package:neat/neuron.dart';
-import 'gene.dart';
-import 'neuron.dart';
-import 'dart:math';
+part of 'connection.dart';
 
-abstract class ALink extends Gene {
-  Neuron from;
-  Neuron to;
-  num weight = 1;
-  bool enabled = true;
-  ALink(this.from, this.to) {
-    depth = max(from.depth, to.depth) + 1;
-  }
+//@JsonSerializable(explicitToJson: true)
+//@CustomNeuronConverter()
+class Link extends Connection {
+  Link.between(Neuron from,Neuron to) : super (from, to);
 
-  get recurrent =>
-      from.y >= to.y;
-}
+  //factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);
 
-class Link extends ALink {
-  Link(from, to) : super (from, to);
-}
-
-class LoopLink extends Link {
-  LoopLink(Neuron loop) : super(loop, loop);
+  Map<String, dynamic> toJson() => throw UnimplementedError();//_$LinkToJson(this);
 }

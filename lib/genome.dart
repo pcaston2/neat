@@ -1,27 +1,47 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:neat/neuron.dart';
 
 import 'gene.dart';
-import 'link.dart';
+import 'connection.dart';
+part 'genome.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class Genome {
   int inputs;
   int outputs;
 
+  @JsonKey(fromJson: _GeneFromJson, toJson: _GeneToJson)
   List<Gene> genes = <Gene>[];
+
+  static List<dynamic> _GeneToJson(List<Gene> genes) {
+    List<dynamic> geneJson = <dynamic>[];
+    for(var g in genes) {
+      geneJson.add(g.toJson());
+    }
+
+    return geneJson;
+  }
+
+  static List<Gene> _GeneFromJson(String json) => throw UnimplementedError();
+
+  factory Genome.fromJson(Map<String, dynamic> json) => _$GenomeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GenomeToJson(this);
 
   Genome(this.inputs, this.outputs) {
     int innovationIdentifier = 0;
     List<Neuron> allInputs = <Neuron>[];
-    allInputs.add(NeuronBias.index(innovationIdentifier++));
+    allInputs.add(Bias.index(innovationIdentifier++));
+
     for (int i = 0; i < inputs; i++) {
-      var input = InputNeuron(innovationIdentifier++);
+      var input = Input.index(innovationIdentifier++);
       input.y = 0;
       allInputs.add(input);
     }
 
     List<Neuron> allOutputs = <Neuron>[];
     for (int i = 0; i < outputs; i++) {
-      var output = OutputNeuron(innovationIdentifier++);
+      var output = Output.index(innovationIdentifier++);
       output.y = 1;
       allOutputs.add(output);
     }
@@ -51,23 +71,23 @@ class Genome {
   Iterable<Neuron> get neurons =>
       genes.whereType<Neuron>();
 
-  Iterable<InputNeuron> get inputNeurons =>
-      genes.whereType<InputNeuron>();
+  Iterable<Input> get inputNeurons =>
+      genes.whereType<Input>();
 
-  Iterable<OutputNeuron> get outputNeurons =>
-      genes.whereType<OutputNeuron>();
+  Iterable<Output> get outputNeurons =>
+      genes.whereType<Output>();
 
-  NeuronBias get biasNeuron =>
-      genes.whereType<NeuronBias>().single;
+  Bias get biasNeuron =>
+      genes.whereType<Bias>().single;
 
-  Iterable<HiddenNeuron> get hiddenNeurons =>
-      genes.whereType<HiddenNeuron>();
+  Iterable<Hidden> get hiddenNeurons =>
+      genes.whereType<Hidden>();
 
   Iterable<Link> get links =>
       genes.whereType<Link>();
 
   get loops =>
-      genes.whereType<LoopLink>();
+      genes.whereType<Loop>();
 
   Link addLink(Neuron from, Neuron to) {
     if (from == to) {
@@ -77,7 +97,7 @@ class Genome {
     if (hasLink(from, to)) {
       throw ArgumentError("This link already exists");
     }
-    var newLink = Link(from, to);
+    var newLink = Link.between(from, to);
     newLink.identifier = "(${from.identifier},${to.identifier})";
     genes.add(newLink);
     return newLink;
@@ -97,20 +117,20 @@ class Genome {
         if (hasLink(from, to)) {
           continue;
         }
-        results.add(Link(from, to));
+        results.add(Link.between(from, to));
       }
     }
     return results;
   }
 
-  LoopLink addLoopLink(Neuron loop) {
-    if (loop is NeuronBias) {
+  Loop addLoopLink(Neuron loop) {
+    if (loop is Bias) {
       throw ArgumentError("Cannot have a loop on a bias neuron");
     }
-    if (loop is InputNeuron) {
+    if (loop is Input) {
       throw ArgumentError("Cannot have a loop on an input neuron");
     }
-    var newLoopLink = LoopLink(loop);
+    var newLoopLink = Loop(loop);
     newLoopLink.identifier =
     "(${loop.identifier},${loop.identifier})";
     genes.add(newLoopLink);
@@ -135,16 +155,16 @@ class Genome {
     return results;
   }
 
-  HiddenNeuron addNeuron(Link link) {
-    if (link is LoopLink) {
+  Hidden addNeuron(Link link) {
+    if (link is Loop) {
       throw ArgumentError("Cannot add a neuron to a looped link");
     }
-    var newNeuron = HiddenNeuron(link);
+    var newNeuron = Hidden(link);
     genes.add(newNeuron);
     return newNeuron;
   }
 
-  HiddenNeuron addNeuronWithLinks(Link link) {
+  Hidden addNeuronWithLinks(Link link) {
     var neuron = addNeuron(link);
     link.enabled = false;
     addLink(link.from, neuron);

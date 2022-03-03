@@ -1,7 +1,8 @@
 library neat;
 
 abstract class Gene {
-  late String identifier;
+  String identifier = "";
   late int depth;
+  Map<String, dynamic> toJson();
 }
 
