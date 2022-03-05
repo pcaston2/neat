@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:neat/neuron.dart';
 
@@ -13,20 +15,37 @@ class Genome {
   @JsonKey(fromJson: _GeneFromJson, toJson: _GeneToJson)
   List<Gene> genes = <Gene>[];
 
-  static List<dynamic> _GeneToJson(List<Gene> genes) {
-    List<dynamic> geneJson = <dynamic>[];
+  static String _GeneToJson(List<Gene> genes) {
+    Map<String, dynamic> geneMap = Map<String, dynamic>();
     for(var g in genes) {
-      geneJson.add(g.toJson());
+      geneMap[g.identifier] = g.toJson();
     }
-
-    return geneJson;
+    return json.encode(geneMap);
   }
 
-  static List<Gene> _GeneFromJson(String json) => throw UnimplementedError();
+  static List<Gene> _GeneFromJson(String json) {
+    Map<String, dynamic> genesMap = jsonDecode(json);
+    var genes = <Gene>[];
+    for (var g in genesMap.values) {
+      genes.add(geneFromJson(g, genes));
+    }
+    return genes;
+  }
 
-  factory Genome.fromJson(Map<String, dynamic> json) => _$GenomeFromJson(json);
-
-  Map<String, dynamic> toJson() => _$GenomeToJson(this);
+  static Gene geneFromJson(Map<String, dynamic> json, List<Gene> genes) {
+    switch (json['type']) {
+      case 'Bias':
+        return Bias.fromJson(json);
+      case 'Output':
+        return Output.fromJson(json);
+      case 'Input':
+        return Input.fromJson(json);
+      case 'Link':
+        return Link.fromJsonWithGenes(json, genes);
+      default:
+        throw UnimplementedError();
+    }
+  }
 
   Genome(this.inputs, this.outputs) {
     int innovationIdentifier = 0;
@@ -97,8 +116,7 @@ class Genome {
     if (hasLink(from, to)) {
       throw ArgumentError("This link already exists");
     }
-    var newLink = Link.between(from, to);
-    newLink.identifier = "(${from.identifier},${to.identifier})";
+    var newLink = Link(from, to);
     genes.add(newLink);
     return newLink;
   }
@@ -117,7 +135,7 @@ class Genome {
         if (hasLink(from, to)) {
           continue;
         }
-        results.add(Link.between(from, to));
+        results.add(Link(from, to));
       }
     }
     return results;
@@ -131,8 +149,6 @@ class Genome {
       throw ArgumentError("Cannot have a loop on an input neuron");
     }
     var newLoopLink = Loop(loop);
-    newLoopLink.identifier =
-    "(${loop.identifier},${loop.identifier})";
     genes.add(newLoopLink);
     return newLoopLink;
   }
@@ -186,4 +202,8 @@ class Genome {
     }
     return results;
   }
+
+  factory Genome.fromJson(Map<String, dynamic> json) => _$GenomeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GenomeToJson(this);
 }

@@ -6,13 +6,15 @@ import 'package:test/test.dart';
 void main() {
   test('simple genome', () {
     //Arrange
-    var genome = Genome(1,1);
+    var g = Genome(1,1);
+    g.addLink(g.biasNeuron, g.outputNeurons.single);
     //Act
-    var json = genome.toJson();
+    var json = g.toJson();
     json.toString();
-    //genome = Genome.fromJson(json);
+    g = Genome.fromJson(json);
     //Assert
-
+    var link = g.links.single;
+    expect(link.identifier, equals('(0,2)'));
   });
 
   test('bias', () {
@@ -60,7 +62,7 @@ void main() {
 
   test('hidden', () {
     //Arrange
-    var link = Link.between(Bias.index(0), Output.index(1));
+    var link = Link(Bias.index(0), Output.index(1));
     var hidden = Hidden(link);
     hidden.depth = 4;
     //Act

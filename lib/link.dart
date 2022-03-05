@@ -1,11 +1,20 @@
 part of 'connection.dart';
 
-//@JsonSerializable(explicitToJson: true)
-//@CustomNeuronConverter()
+@JsonSerializable(explicitToJson: true)
 class Link extends Connection {
-  Link.between(Neuron from,Neuron to) : super (from, to);
+  Link(Neuron from, Neuron to) : super(from, to);
 
-  //factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);
+  factory Link.fromJsonWithGenes(Map<String, dynamic> json, List<Gene> genes) {
+    var from = genes.whereType<Neuron>().singleWhere((g) => g.identifier == json['from']);
+    var to = genes.whereType<Neuron>().singleWhere((g) => g.identifier == json['to']);
+    return Link(from, to);
+  }
 
-  Map<String, dynamic> toJson() => throw UnimplementedError();//_$LinkToJson(this);
+  factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);
+
+  Map<String, dynamic> toJson() {
+    var result = _$LinkToJson(this);
+    result['type'] = runtimeType.toString();
+    return result;
+  }
 }
