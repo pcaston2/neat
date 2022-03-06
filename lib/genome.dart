@@ -127,8 +127,7 @@ class Genome {
     return links.any((l) => l.from == from && l.to == to);
   }
 
-  List<Link> get possibleLinks {
-    var results = <Link>[];
+  Iterable<Link> get possibleLinks sync* {
     for(var to in neurons) {
       if (!to.canLinkTo) {
         continue;
@@ -140,10 +139,13 @@ class Genome {
         if (hasLink(from, to)) {
           continue;
         }
-        results.add(Link(from, to));
+        yield Link(from, to);
       }
     }
-    return results;
+  }
+
+  bool get canAddLink {
+    return possibleLinks.isNotEmpty;
   }
 
   Loop addLoopLink(Neuron loop) {
@@ -162,8 +164,7 @@ class Genome {
     return loops.any((l) => l.from == loop);
   }
 
-  List<Neuron> get possibleLoopLink {
-    var results = <Neuron>[];
+  Iterable<Neuron> get possibleLoops sync* {
     for(var n in neurons) {
       if (!n.canLoop) {
         continue;
@@ -171,9 +172,12 @@ class Genome {
       if (hasLoopLink(n)) {
         continue;
       }
-      results.add(n);
+      yield n;
     }
-    return results;
+  }
+
+  bool get canAddLoop {
+    return possibleLoops.isNotEmpty;
   }
 
   Hidden addNeuron(Link link) {
@@ -198,14 +202,16 @@ class Genome {
     return hiddenNeurons.any((n) => n.link == link);
   }
 
-  List<Link> get possibleNeurons {
-    var results = <Link>[];
+  Iterable<Link> get possibleNeurons sync* {
     for(var l in links) {
       if (!hasNeuron(l)) {
-        results.add(l);
+        yield l;
       }
     }
-    return results;
+  }
+
+  bool get canAddNeuron {
+    return possibleNeurons.isNotEmpty;
   }
 
   factory Genome.fromJson(Map<String, dynamic> json) => _$GenomeFromJson(json);

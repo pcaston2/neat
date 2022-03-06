@@ -94,5 +94,26 @@ void main() {
       expect(possibleNeurons.length, 1);
       expect(possibleNeurons, contains(link));
     });
+
+    test('should not be able to add neurons', () {
+      //Arrange
+      Genome g = Genome(1,1);
+      //Act
+      var canAddNeurons = g.canAddNeuron;
+      //Assert
+      expect(canAddNeurons, isFalse);
+    });
+
+    test('should be able to add neurons', () {
+      //Arrange
+      Genome g = Genome(1,1);
+      var input = g.inputNeurons.single;
+      var output = g.outputNeurons.single;
+      g.addLink(input, output);
+      //Act
+      var canAddNeurons = g.canAddNeuron;
+      //Assert
+      expect(canAddNeurons, isTrue);
+    });
   });
 }
