@@ -10,6 +10,9 @@ class Bias extends Neuron {
   @override
   bool get canLoop => false;
 
+  @override
+  bool get canLinkTo => false;
+
   factory Bias.fromJson(Map<String, dynamic> json) => _$BiasFromJson(json);
 
   Map<String, dynamic> toJson() {

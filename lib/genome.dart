@@ -42,6 +42,8 @@ class Genome {
         return Input.fromJson(json);
       case 'Link':
         return Link.fromJsonWithGenes(json, genes);
+      case 'Hidden':
+        return Hidden.fromJsonWithGenes(json, genes);
       default:
         throw UnimplementedError();
     }
@@ -127,8 +129,11 @@ class Genome {
 
   List<Link> get possibleLinks {
     var results = <Link>[];
-    for(var from in neurons) {
-      for (var to in neurons) {
+    for(var to in neurons) {
+      if (!to.canLinkTo) {
+        continue;
+      }
+      for (var from in neurons) {
         if (from == to) {
           continue;
         }
@@ -148,7 +153,7 @@ class Genome {
     if (loop is Input) {
       throw ArgumentError("Cannot have a loop on an input neuron");
     }
-    var newLoopLink = Loop(loop);
+    var newLoopLink = Loop.around(loop);
     genes.add(newLoopLink);
     return newLoopLink;
   }

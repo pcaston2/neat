@@ -8,6 +8,9 @@ class Input extends Neuron {
   @override
   bool get canLoop => false;
 
+  @override
+  bool get canLinkTo => false;
+
   factory Input.fromJson(Map<String, dynamic> json) => _$InputFromJson(json);
 
   Map<String, dynamic> toJson() {

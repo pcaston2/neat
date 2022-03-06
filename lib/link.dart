@@ -7,7 +7,10 @@ class Link extends Connection {
   factory Link.fromJsonWithGenes(Map<String, dynamic> json, List<Gene> genes) {
     var from = genes.whereType<Neuron>().singleWhere((g) => g.identifier == json['from']);
     var to = genes.whereType<Neuron>().singleWhere((g) => g.identifier == json['to']);
-    return Link(from, to);
+    var link = Link(from, to);
+    link.weight = json['weight'];
+    link.enabled = json['enabled'];
+    return link;
   }
 
   factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);

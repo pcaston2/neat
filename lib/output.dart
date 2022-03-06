@@ -8,6 +8,9 @@ class Output extends Neuron {
   @override
   bool get canLoop => true;
 
+  @override
+  bool get canLinkTo => true;
+
   factory Output.fromJson(Map<String, dynamic> json) => _$OutputFromJson(json);
 
   Map<String, dynamic> toJson() {

@@ -15,6 +15,18 @@ class Hidden extends Neuron {
   @override
   bool get canLoop => true;
 
+  @override
+  bool get canLinkTo => true;
+
+  factory Hidden.fromJsonWithGenes(Map<String, dynamic> json, List<Gene> genes) {
+    var link = genes.whereType<Link>().singleWhere((g) => g.identifier == json['link']);
+    var hidden = Hidden(link);
+    hidden.depth = json['depth'];
+    hidden.x = json['x'];
+    hidden.y = json['y'];
+    return hidden;
+  }
+
   factory Hidden.fromJson(Map<String, dynamic> json) => _$HiddenFromJson(json);
 
   Map<String, dynamic> toJson() {

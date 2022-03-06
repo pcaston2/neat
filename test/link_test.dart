@@ -62,7 +62,7 @@ void main() {
       //Act
       var possibleLinks = g.possibleLinks;
       //Assert
-      expect(possibleLinks, hasLength(2));
+      expect(possibleLinks, hasLength(1));
       expect(possibleLinks.where((l) => l.from == bias && l.to == output),isNotEmpty);
     });
 
@@ -78,6 +78,21 @@ void main() {
       expect(possibleLinks.where((l) => l.from == bias && l.to == output),isEmpty);
     });
 
+    test('should not link to bias or inputs', () {
+      //Arrange
+      Genome g = Genome(1, 1);
+      var bias = g.biasNeuron;
+      var output = g.outputNeurons.single;
+      var input = g.inputNeurons.single;
+      //Act
+      var possibleLinks = g.possibleLinks;
+      //Assert
+      expect(possibleLinks.where((l) => l.from == output && l.to == bias),isEmpty);
+      expect(possibleLinks.where((l) => l.from == output && l.to == input), isEmpty);
+      expect(possibleLinks.where((l) => l.from == input && l.to == bias), isEmpty);
+      expect(possibleLinks.where((l) => l.from == bias && l.to == input), isEmpty);
+    });
+
     group('Loop', () {
 
       test('should add loop', () {
@@ -87,7 +102,7 @@ void main() {
         //Act
         var loopLink = g.addLoopLink(output);
         //Assert
-        expect(loopLink.identifier, equals("(1,1)"));
+        expect(loopLink.identifier, equals("(1)"));
         expect(g.genes, contains(loopLink));
         expect(loopLink.recurrent, isTrue);
         expect(loopLink.depth, equals(1));

@@ -6,7 +6,6 @@ import 'dart:math';
 part 'loop.dart';
 part 'link.dart';
 part 'connection.g.dart';
-//part 'connection.g.dart';
 
 abstract class Connection extends Gene {
   @JsonKey(fromJson: _NeuronFromJson, toJson: _NeuronToJson)
