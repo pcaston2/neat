@@ -16,7 +16,7 @@ void main() {
       expect(neuron.x, equals(0.75));
       expect(neuron.y, equals(0.5));
       expect(g.genes, contains(neuron));
-      expect(neuron.depth, equals(2));
+      expect(neuron.depth, equals(1));
     });
 
     test('should add and include links', () {
@@ -79,7 +79,7 @@ void main() {
       expect(neuron.x, equals(0.625));
       expect(neuron.y, equals(0.75));
       expect(g.genes, contains(neuron));
-      expect(neuron.depth, equals(4));
+      expect(neuron.depth, equals(2));
     });
 
     test('should find possible neurons', () {

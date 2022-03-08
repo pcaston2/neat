@@ -26,7 +26,29 @@ void main() {
       expect(g.genes, everyElement((gene) => gene.depth == 0));
     });
 
+    test('should crossover', () {
+      //Arrange
+      Genome fit = Genome(1,1);
+      var bias = fit.biasNeuron;
+      var input = fit.inputNeurons.single;
+      var output = fit.outputNeurons.single;
+      fit.addLink(input, output);
 
-
+      Genome weak = Genome(1,1);
+      bias = weak.biasNeuron;
+      input = weak.inputNeurons.single;
+      output = weak.outputNeurons.single;
+      weak.addLink(input, output);
+      weak.addLink(bias, output);
+      //Act
+      var child = Genome.crossover(fit, weak);
+      //Assert
+      var links = child.links;
+      input = child.inputNeurons.single;
+      output = child.outputNeurons.single;
+      //child shouldn't have link from bias to output
+      expect(links.where((l) => l.from == bias && l.to == output),isEmpty);
+      expect(links.where((l) => l.from == input && l.to == output),isNotEmpty);
+    });
   });
 }

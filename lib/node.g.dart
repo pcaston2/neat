@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'neuron.dart';
+part of 'node.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

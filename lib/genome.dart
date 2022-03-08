@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:neat/neuron.dart';
+import 'package:neat/node.dart';
 
 import 'gene.dart';
 import 'connection.dart';
@@ -51,7 +51,7 @@ class Genome {
 
   Genome(this.inputs, this.outputs) {
     int innovationIdentifier = 0;
-    List<Neuron> allInputs = <Neuron>[];
+    List<Node> allInputs = <Node>[];
     allInputs.add(Bias.index(innovationIdentifier++));
 
     for (int i = 0; i < inputs; i++) {
@@ -60,7 +60,7 @@ class Genome {
       allInputs.add(input);
     }
 
-    List<Neuron> allOutputs = <Neuron>[];
+    List<Node> allOutputs = <Node>[];
     for (int i = 0; i < outputs; i++) {
       var output = Output.index(innovationIdentifier++);
       output.y = 1;
@@ -89,8 +89,8 @@ class Genome {
     genes.addAll(allOutputs);
   }
 
-  Iterable<Neuron> get neurons =>
-      genes.whereType<Neuron>();
+  Iterable<Node> get neurons =>
+      genes.whereType<Node>();
 
   Iterable<Input> get inputNeurons =>
       genes.whereType<Input>();
@@ -110,7 +110,7 @@ class Genome {
   get loops =>
       genes.whereType<Loop>();
 
-  Link addLink(Neuron from, Neuron to) {
+  Link addLink(Node from, Node to) {
     if (from == to) {
       throw ArgumentError(
           "Looped Links should be created by calling AddLoopLink");
@@ -123,7 +123,7 @@ class Genome {
     return newLink;
   }
 
-  bool hasLink(Neuron from, Neuron to) {
+  bool hasLink(Node from, Node to) {
     return links.any((l) => l.from == from && l.to == to);
   }
 
@@ -148,7 +148,7 @@ class Genome {
     return possibleLinks.isNotEmpty;
   }
 
-  Loop addLoopLink(Neuron loop) {
+  Loop addLoopLink(Node loop) {
     if (loop is Bias) {
       throw ArgumentError("Cannot have a loop on a bias neuron");
     }
@@ -160,11 +160,11 @@ class Genome {
     return newLoopLink;
   }
 
-  bool hasLoopLink(Neuron loop) {
+  bool hasLoopLink(Node loop) {
     return loops.any((l) => l.from == loop);
   }
 
-  Iterable<Neuron> get possibleLoops sync* {
+  Iterable<Node> get possibleLoops sync* {
     for(var n in neurons) {
       if (!n.canLoop) {
         continue;
@@ -214,7 +214,42 @@ class Genome {
     return possibleNeurons.isNotEmpty;
   }
 
+  factory Genome.crossover(Genome fittest, Genome weak) {
+    var child = Genome.clone(fittest);
+    for (var fitLink in child.links) {
+      if (weak.links.any((l) => l.identifier == fitLink.identifier)) {
+        var weakLink = weak.links.singleWhere((l) => l.identifier == fitLink.identifier);
+        List<Link> choices = [weakLink, fitLink];
+        choices.shuffle();
+        var choice = choices.first;
+        if (choice != fitLink) {
+          fitLink.weight = weakLink.weight;
+          fitLink.enabled = weakLink.enabled;
+        }
+      }
+    }
+
+    for (var fitLoop in child.loops) {
+      if (weak.loops.any((l) => l.identifier == fitLoop.identifier)) {
+        var weakLoop = weak.loops.singleWhere((l) => l.identifier == fitLoop.identifier);
+        List<Link> choices = [weakLoop, fitLoop];
+        choices.shuffle();
+        var choice = choices.first;
+        if (choice != fitLoop) {
+          fitLoop.weight = weakLoop.weight;
+          fitLoop.enabled = weakLoop.enabled;
+        }
+      }
+    }
+
+    return child;
+  }
+
   factory Genome.fromJson(Map<String, dynamic> json) => _$GenomeFromJson(json);
+
+  factory Genome.clone(Genome original) {
+    return Genome.fromJson(original.toJson());
+  }
 
   Map<String, dynamic> toJson() => _$GenomeToJson(this);
 }

@@ -2,13 +2,13 @@ part of 'connection.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Loop extends Connection {
-  Loop.around(Neuron loop) : super(loop, loop) {
+  Loop.around(Node loop) : super(loop, loop) {
     identifier = '(' + loop.identifier + ')';
   }
-  Loop(Neuron from, Neuron to) : this.around(from);
+  Loop(Node from, Node to) : this.around(from);
 
   factory Loop.fromJsonWithGenes(Map<String, dynamic> json, List<Gene> genes) {
-    var loopGene = genes.whereType<Neuron>().singleWhere((g) => g.identifier == json['from']);
+    var loopGene = genes.whereType<Node>().singleWhere((g) => g.identifier == json['from']);
     var link = Loop.around(loopGene);
     link.weight = json['weight'];
     link.enabled = json['enabled'];

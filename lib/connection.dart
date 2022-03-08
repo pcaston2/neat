@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:neat/neuron.dart';
+import 'package:neat/node.dart';
 import 'gene.dart';
-import 'neuron.dart';
+import 'node.dart';
 import 'dart:math';
 part 'loop.dart';
 part 'link.dart';
@@ -9,9 +9,9 @@ part 'connection.g.dart';
 
 abstract class Connection extends Gene {
   @JsonKey(fromJson: _NeuronFromJson, toJson: _NeuronToJson)
-  Neuron from;
+  Node from;
   @JsonKey(fromJson: _NeuronFromJson, toJson: _NeuronToJson)
-  Neuron to;
+  Node to;
   num weight = 1;
   bool enabled = true;
 
@@ -23,6 +23,6 @@ abstract class Connection extends Gene {
   get recurrent =>
       from.y >= to.y;
 
-  static String _NeuronToJson(Neuron neuron) => neuron.identifier;
-  static Neuron _NeuronFromJson(String json) => throw UnimplementedError();
+  static String _NeuronToJson(Node neuron) => neuron.identifier;
+  static Node _NeuronFromJson(String json) => throw UnimplementedError();
 }

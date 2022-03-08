@@ -1,5 +1,5 @@
 import 'package:neat/genome.dart';
-import 'package:neat/neuron.dart';
+import 'package:neat/node.dart';
 import 'package:neat/connection.dart';
 import 'package:test/test.dart';
 
@@ -23,7 +23,7 @@ void main() {
     expect(link.depth, equals(1));
     var neuron = g.hiddenNeurons.single;
     expect(neuron.identifier, equals("{0,2}"));
-    expect(neuron.depth, equals(2));
+    expect(neuron.depth, equals(1));
     expect(g.genes.length, equals(5));
   });
 

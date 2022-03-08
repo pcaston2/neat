@@ -1,7 +1,7 @@
-part of 'neuron.dart';
+part of 'node.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Output extends Neuron {
+class Output extends Node {
   Output() : this.index(0);
   Output.index(int innovationIdentifier) : super.index(innovationIdentifier);
 

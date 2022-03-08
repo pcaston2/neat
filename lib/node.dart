@@ -4,11 +4,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'bias.dart';
 part 'output.dart';
-part 'neuron.g.dart';
+part 'node.g.dart';
 part 'input.dart';
 part 'hidden.dart';
 
-abstract class Neuron implements Gene {
+abstract class Node implements Gene {
   num x = 0;
   num y = 0;
 
@@ -22,9 +22,9 @@ abstract class Neuron implements Gene {
   @override
   int depth = 0;
 
-  Neuron() : super();
+  Node() : super();
 
-  Neuron.index(int identifier): super() {
+  Node.index(int identifier): super() {
     this.identifier = identifier.toString();
     depth = 0;
   }

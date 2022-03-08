@@ -1,13 +1,13 @@
-part of 'neuron.dart';
+part of 'node.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Hidden extends Neuron {
+class Hidden extends Node {
 
   @JsonKey(fromJson: _LinkFromJson, toJson: _LinkToJson)
   Link link;
   Hidden(this.link) {
     identifier = "{${link.from.identifier},${link.to.identifier}}";
-    depth = link.depth + 1;
+    depth = link.depth;
     x = (link.from.x + link.to.x) / 2;
     y = (link.from.y + link.to.y) / 2;
   }

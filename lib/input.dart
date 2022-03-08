@@ -1,7 +1,7 @@
-part of '../neuron.dart';
+part of '../node.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Input extends Neuron {
+class Input extends Node {
   Input() : super();
   Input.index(int innovationIdentifier) : super.index(innovationIdentifier);
 

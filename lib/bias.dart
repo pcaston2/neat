@@ -1,7 +1,7 @@
-part of 'neuron.dart';
+part of 'node.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Bias extends Neuron {
+class Bias extends Node {
 
   Bias() : this.index(0);
 

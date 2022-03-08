@@ -12,3 +12,9 @@ class LinkMutation extends Mutation {
 class LinkedLoopMutation extends Mutation {
   LinkedLoopMutation([num weight = 0.03]) : super(weight);
 }
+
+class NeuronMutation extends Mutation {
+  NeuronMutation([num weight = 0.05]) : super(weight);
+}
+
+
