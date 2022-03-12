@@ -14,6 +14,7 @@ void main() {
       var output = g.outputNeurons.single;
       //Assert
       expect(g.genes.length, equals(3));
+      expect(g.generation, equals(0));
       expect(bias.x, equals(0));
       expect(bias.y, equals(0));
       expect(input.x, equals(1));

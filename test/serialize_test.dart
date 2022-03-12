@@ -1,22 +1,65 @@
+import 'package:neat/generation.dart';
 import 'package:neat/genome.dart';
+import 'package:neat/neuralNet.dart';
 import 'package:neat/node.dart';
 import 'package:neat/connection.dart';
+import 'package:neat/species.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('neural net', () {
+    //Arrange
+    var nn = NeuralNet(0,1);
+    //Act
+    var json = nn.toJson();
+    nn = NeuralNet.fromJson(json);
+    //Assert
+    expect(nn.inputs, equals(0));
+    expect(nn.outputs, equals(1));
+    expect(nn.species.length, equals(0));
+  });
+
+  test('populated neural net', () {
+    //Arrange
+    var nn = NeuralNet(0,1);
+    nn.createNextGeneration();
+    //Act
+    var json = nn.toJson();
+    nn = NeuralNet.fromJson(json);
+    //Assert
+    expect(nn.inputs, equals(0));
+    expect(nn.outputs, equals(1));
+    expect(nn.species.length, equals(1));
+    expect(nn.generations.length, equals(1));
+  });
+
+  test('species', () {
+    //Arrange
+    var g = new Genome(1,1);
+    var s = Species.withRepresentative(g);
+    //Act
+    var json = s.toJson();
+    s = Species.fromJson(json);
+    //Assert
+    expect(s.genomes.length, 1);
+  });
+
   test('genome', () {
     //Arrange
     var g = Genome(1,1);
+    g.generation = 2;
     var originalLink = g.addLink(g.biasNeuron, g.outputNeurons.single);
     originalLink.weight = 0.8;
     originalLink.enabled = false;
     g.addNeuron(originalLink);
     //Act
     var json = g.toJson();
-    json.toString();
     g = Genome.fromJson(json);
     //Assert
     var link = g.links.single;
+    expect(g.inputs, equals(1));
+    expect(g.outputs, equals(1));
+    expect(g.generation, equals(2));
     expect(link.identifier, equals('(0,2)'));
     expect(link.enabled, isFalse);
     expect(link.weight, equals(0.8));

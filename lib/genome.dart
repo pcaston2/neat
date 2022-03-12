@@ -11,6 +11,7 @@ part 'genome.g.dart';
 class Genome {
   int inputs;
   int outputs;
+  int generation = 0;
 
   @JsonKey(fromJson: _GeneFromJson, toJson: _GeneToJson)
   List<Gene> genes = <Gene>[];
