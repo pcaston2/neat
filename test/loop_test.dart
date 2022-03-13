@@ -7,9 +7,9 @@ void main() {
     test('should add loop', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var output = g.outputNeurons.single;
+      var output = g.outputs.single;
       //Act
-      var loopLink = g.addLoopLink(output);
+      var loopLink = g.addLoop(output);
       //Assert
       expect(loopLink.identifier, equals("(1)"));
       expect(g.genes, contains(loopLink));
@@ -20,10 +20,10 @@ void main() {
     test('should detect loop', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var output = g.outputNeurons.single;
-      g.addLoopLink(output);
+      var output = g.outputs.single;
+      g.addLoop(output);
       //Act
-      var hasLink = g.hasLoopLink(output);
+      var hasLink = g.hasLoop(output);
       //Assert
       expect(hasLink, isTrue);
     });
@@ -31,9 +31,9 @@ void main() {
     test('should not detect loop', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var output = g.outputNeurons.single;
+      var output = g.outputs.single;
       //Act
-      var hasLink = g.hasLoopLink(output);
+      var hasLink = g.hasLoop(output);
       //Assert
       expect(hasLink, isFalse);
     });
@@ -41,7 +41,7 @@ void main() {
     test('should find possible', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var output = g.outputNeurons.single;
+      var output = g.outputs.single;
       //Act
       var possibleLinks = g.possibleLoops;
       //Assert
@@ -61,8 +61,8 @@ void main() {
     test('should not be able to add loop', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var output = g.outputNeurons.single;
-      g.addLoopLink(output);
+      var output = g.outputs.single;
+      g.addLoop(output);
       //Act
       var canAddLoops = g.canAddLoop;
       //Assert

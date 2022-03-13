@@ -6,8 +6,8 @@ void main() {
     test('should add', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       //Act
       var link = g.addLink(input, output);
       //Assert
@@ -20,8 +20,8 @@ void main() {
     test('should not detect', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       //Act
       var hasLink = g.hasLink(input, output);
       //Assert
@@ -31,8 +31,8 @@ void main() {
     test('should detect', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       g.addLink(input, output);
       //Act
       var hasLink = g.hasLink(input, output);
@@ -43,8 +43,8 @@ void main() {
     test('should add recurrent', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       //Act
       var recurrentLink = g.addLink(output, input);
       //Assert
@@ -57,8 +57,8 @@ void main() {
     test('should find possible', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var bias = g.biasNeuron;
-      var output = g.outputNeurons.single;
+      var bias = g.bias;
+      var output = g.outputs.single;
       //Act
       var possibleLinks = g.possibleLinks;
       //Assert
@@ -69,8 +69,8 @@ void main() {
     test('should not find possible', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var bias = g.biasNeuron;
-      var output = g.outputNeurons.single;
+      var bias = g.bias;
+      var output = g.outputs.single;
       g.addLink(bias, output);
       //Act
       var possibleLinks = g.possibleLinks;
@@ -90,8 +90,8 @@ void main() {
     test('should not be able to add link', () {
       //Arrange
       Genome g = Genome(0, 1);
-      var bias = g.biasNeuron;
-      var output = g.outputNeurons.single;
+      var bias = g.bias;
+      var output = g.outputs.single;
       g.addLink(bias, output);
       //Act
       var canAddLinks = g.canAddLink;
@@ -102,9 +102,9 @@ void main() {
     test('should not link to bias or inputs', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var bias = g.biasNeuron;
-      var output = g.outputNeurons.single;
-      var input = g.inputNeurons.single;
+      var bias = g.bias;
+      var output = g.outputs.single;
+      var input = g.inputs.single;
       //Act
       var possibleLinks = g.possibleLinks;
       //Assert

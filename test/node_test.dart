@@ -6,8 +6,8 @@ void main() {
     test('should add', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       var link = g.addLink(input, output);
       //Act
       var neuron = g.addNeuron(link);
@@ -22,8 +22,8 @@ void main() {
     test('should add and include links', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       var link = g.addLink(input, output);
       link.weight = 0.8;
       //Act
@@ -42,8 +42,8 @@ void main() {
     test('should detect', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       var link = g.addLink(input, output);
       g.addNeuron(link);
       //Act
@@ -55,8 +55,8 @@ void main() {
     test('should not detect', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       var link = g.addLink(input, output);
       //Act
       var hasNeuron = g.hasNeuron(link);
@@ -67,8 +67,8 @@ void main() {
     test('should add with connected to a hidden one', () {
       //Arrange
       Genome g = Genome(1, 1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       var link = g.addLink(input, output);
       var firstNeuron = g.addNeuron(link);
       var secondLink = g.addLink(firstNeuron, output);
@@ -85,8 +85,8 @@ void main() {
     test('should find possible neurons', () {
       //Arrange
       Genome g = Genome(1,1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       var link = g.addLink(input, output);
       //Act
       var possibleNeurons = g.possibleNeurons;
@@ -107,8 +107,8 @@ void main() {
     test('should be able to add neurons', () {
       //Arrange
       Genome g = Genome(1,1);
-      var input = g.inputNeurons.single;
-      var output = g.outputNeurons.single;
+      var input = g.inputs.single;
+      var output = g.outputs.single;
       g.addLink(input, output);
       //Act
       var canAddNeurons = g.canAddNeuron;

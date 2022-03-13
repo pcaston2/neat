@@ -35,7 +35,7 @@ void main() {
     //Arrange
     var g = Genome(1,1);
     g.generation = 2;
-    var originalLink = g.addLink(g.biasNeuron, g.outputNeurons.single);
+    var originalLink = g.addLink(g.bias, g.outputs.single);
     originalLink.weight = 0.8;
     originalLink.enabled = false;
     g.addNeuron(originalLink);
@@ -44,14 +44,14 @@ void main() {
     g = Genome.fromJson(json);
     //Assert
     var link = g.links.single;
-    expect(g.inputs, equals(1));
-    expect(g.outputs, equals(1));
+    expect(g.inputCount, equals(1));
+    expect(g.outputCount, equals(1));
     expect(g.generation, equals(2));
     expect(link.identifier, equals('(0,2)'));
     expect(link.enabled, isFalse);
     expect(link.weight, equals(0.8));
     expect(link.depth, equals(1));
-    var neuron = g.hiddenNeurons.single;
+    var neuron = g.hiddens.single;
     expect(neuron.identifier, equals("{0,2}"));
     expect(neuron.depth, equals(1));
     expect(g.genes.length, equals(5));
