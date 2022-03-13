@@ -21,7 +21,7 @@ class Genome {
     for(var g in genes) {
       geneMap[g.identifier] = g.toJson();
     }
-    return json.encode(geneMap);
+    return jsonEncode(geneMap);
   }
 
   static List<Gene> _GeneFromJson(String json) {

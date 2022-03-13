@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:neat/neuralNetOptions.dart';
 import 'package:neat/species.dart';
@@ -29,8 +26,28 @@ class NeuralNet {
     species = <int, Species>{};
   }
 
-  factory NeuralNet.fromJson(Map<String, dynamic> json) =>
-      _$NeuralNetFromJson(json);
+  factory NeuralNet.fromJson(Map<String, dynamic> json) {
+    var result = _$NeuralNetFromJson(json);
+    Map<int, dynamic> genomes = json['genomes'];
+    for(var entry in genomes.entries) {
+      var genome = Genome.fromJson(entry.value);
+      var speciesId = entry.value['species'];
+      var generationId = entry.value['generation'];
+      if (result.species.containsKey(speciesId)) {
+        result.species[speciesId]?.genomes.add(genome);
+      } else {
+        result.species[speciesId] = Species.withRepresentative(genome);
+      }
+      if (result.generations.containsKey(generationId)) {
+        result.generations[generationId]?.genomes.add(genome);
+      } else {
+        var gen = Generation();
+        gen.genomes.add(genome);
+        result.generations[generationId] = gen;
+      }
+    }
+    return result;
+  }
 
   Generation createNextGeneration() {
     if (generations.isEmpty) {

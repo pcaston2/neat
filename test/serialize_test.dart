@@ -1,9 +1,7 @@
-import 'package:neat/generation.dart';
 import 'package:neat/genome.dart';
 import 'package:neat/neuralNet.dart';
 import 'package:neat/node.dart';
 import 'package:neat/connection.dart';
-import 'package:neat/species.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -31,17 +29,6 @@ void main() {
     expect(nn.outputs, equals(1));
     expect(nn.species.length, equals(1));
     expect(nn.generations.length, equals(1));
-  });
-
-  test('species', () {
-    //Arrange
-    var g = new Genome(1,1);
-    var s = Species.withRepresentative(g);
-    //Act
-    var json = s.toJson();
-    s = Species.fromJson(json);
-    //Assert
-    expect(s.genomes.length, 1);
   });
 
   test('genome', () {
