@@ -34,11 +34,11 @@ void main() {
   test('genome', () {
     //Arrange
     var g = Genome(1,1);
-    g.generation = 2;
     var originalLink = g.addLink(g.bias, g.outputs.single);
     originalLink.weight = 0.8;
     originalLink.enabled = false;
-    g.addNeuron(originalLink);
+    g.addNode(originalLink);
+    g.addLoop(g.bias);
     //Act
     var json = g.toJson();
     g = Genome.fromJson(json);
@@ -46,7 +46,6 @@ void main() {
     var link = g.links.single;
     expect(g.inputCount, equals(1));
     expect(g.outputCount, equals(1));
-    expect(g.generation, equals(2));
     expect(link.identifier, equals('(0,2)'));
     expect(link.enabled, isFalse);
     expect(link.weight, equals(0.8));

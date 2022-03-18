@@ -1,3 +1,4 @@
+import 'package:neat/mutation.dart';
 import 'package:test/test.dart';
 import 'package:neat/genome.dart';
 
@@ -14,7 +15,6 @@ void main() {
       var output = g.outputs.single;
       //Assert
       expect(g.genes.length, equals(3));
-      expect(g.generation, equals(0));
       expect(bias.x, equals(0));
       expect(bias.y, equals(0));
       expect(input.x, equals(1));
@@ -101,6 +101,98 @@ void main() {
       //child shouldn't have link from bias to output
       expect(links.where((l) => l.from == bias && l.to == output),isEmpty);
       expect(links.where((l) => l.from == input && l.to == output),isNotEmpty);
+    });
+
+    test('should have mutations', () {
+      //Arrange
+      Genome g = Genome(1,1);
+      //Act
+      var possibleMutations = g.getPossibleMutations().keys;
+      //Assert
+      expect(possibleMutations.whereType<LinkMutation>(), isNotEmpty);
+      expect(possibleMutations.whereType<LoopMutation>(), isNotEmpty);
+      expect(possibleMutations.whereType<NodeMutation>(), isEmpty);
+      expect(possibleMutations.whereType<WeightMutation>(), isEmpty);
+    });
+
+    test('should have more mutations', () {
+      //Arrange
+      Genome g = Genome(1,1);
+      g.addLink(g.bias, g.outputs.first);
+      //Act
+      var possibleMutations = g.getPossibleMutations().keys;
+      //Assert
+      expect(possibleMutations.whereType<LinkMutation>(), isNotEmpty);
+      expect(possibleMutations.whereType<LoopMutation>(), isNotEmpty);
+      expect(possibleMutations.whereType<NodeMutation>(), isNotEmpty);
+      expect(possibleMutations.whereType<WeightMutation>(), isNotEmpty);
+    });
+
+    test('should have a genetic difference', () {
+      //Arrange
+      Genome g1 = Genome(1,1);
+      Genome g2 = g1.mutate();
+      //Act
+      var difference = g1.geneticDifference(g2);
+      //Assert
+      expect(difference, greaterThan(0));
+    });
+
+    test('should update input', () {
+      //Arrange
+      var g = Genome(0,1);
+      var output = g.outputs.single;
+      //Act
+      g.updateInputs();
+      //Assert
+      expect(output.input, equals(0.5));
+      expect(g.bias.input, equals(0));
+    });
+
+    test('should copy to output', () {
+      //Arrange
+      var g = Genome(0,1);
+      var output = g.outputs.single;
+      output.input = 0.5;
+      //Act
+      g.transferToOutputs();
+      //Assert
+      expect(output.getOutput(), equals(0.5));
+      expect(g.bias.getOutput(), equals(1));
+    });
+
+    test('should update', () {
+      //Arrange
+      var g = Genome(0,1);
+      var output = g.outputs.single;
+      g.addLink(output, g.bias);
+      //Act
+      g.update();
+      //Assert
+      expect(output.getOutput(), equals(0.5));
+      expect(g.bias.getOutput(), equals(1));
+    });
+
+    test('should evolve', () {
+      var best = Genome(1,1);
+      var current = best;
+      int bestScore = 0;
+      while (true) {
+        var currentScore = 0;
+        for (int i=0;i<10;i++) {
+          current.update();
+          var expectedToggle = i % 2 == 0;
+          var resultToggle = current.getOutputs().single > 0.5;
+          if (resultToggle == expectedToggle) {
+            currentScore++;
+          }
+        }
+        if (currentScore > bestScore) {
+          best = current;
+          bestScore = currentScore;
+        }
+        current = current.mutate();
+      }
     });
   });
 }

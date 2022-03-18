@@ -3,16 +3,18 @@ import 'dart:math';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:neat/node.dart';
+import 'package:neat/weightedRandomChoice.dart';
 
 import 'gene.dart';
 import 'connection.dart';
+import 'mutation.dart';
 part 'genome.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Genome {
   int inputCount;
   int outputCount;
-  int generation = 0;
+  num fitness = 0;
 
   @JsonKey(fromJson: _GeneFromJson, toJson: _GeneToJson)
   List<Gene> genes = <Gene>[];
@@ -52,9 +54,44 @@ class Genome {
         current.y = i / (allInputs.length - 1);
       }
     }
-
     genes.addAll(allInputs);
     genes.addAll(allOutputs);
+  }
+
+  Map<Mutation, num> getPossibleMutations() {
+    var mutations = Map<Mutation, num>();
+    if (canAddNode) {
+      var mutation = NodeMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (canAddLink) {
+      var mutation = LinkMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (canAddLoop) {
+      var mutation = LoopMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (canChangeWeight) {
+      var mutation = WeightMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (mutations.isEmpty) {
+      throw UnsupportedError("There are no possible mutations for this genome");
+    }
+    return mutations;
+  }
+
+  factory Genome.mutate(Genome g) {
+    var result = Genome.clone(g);
+    var mutations = result.getPossibleMutations();
+    var mutation = mutations.weightedChoice();
+    mutation.mutate(result);
+    return result;
+  }
+
+  Genome mutate() {
+    return Genome.mutate(this);
   }
 
   factory Genome.crossover(Genome fittest, Genome weak) {
@@ -71,15 +108,57 @@ class Genome {
         }
       }
     }
-
     return child;
   }
 
-  bool isSameSpecies(Genome g, [num tolerance = 0.26]) {
-    return speciesDifference(g) < tolerance;
+  void update() {
+    updateInputs();
+    transferToOutputs();
   }
 
-  num speciesDifference(Genome g2) {
+  void clear() {
+    for (var n in nodes) {
+      n.input = 0;
+    }
+  }
+
+
+  void updateInputs() {
+    for(var n in nodes) {
+      var inputs = connections.where((c) => c.enabled && c.to == n);
+      n.updateInput(inputs);
+    }
+  }
+
+  void transferToOutputs() {
+    for (var n in nodes) {
+      n.output = n.input;
+    }
+  }
+
+  void registerInputs(List<num> inputs) {
+    if (inputs.length != inputCount) {
+      throw ArgumentError("Incorrect number of inputs passed, expecting $inputCount but received $inputs.length", "inputs");
+    }
+    var genomeInputs = this.inputs.toList();
+    for (int i = 0;i<inputs.length;i++) {
+      genomeInputs[i].output = inputs[i];
+    }
+  }
+
+  List<num> getOutputs() {
+    var outputValues = <num>[];
+    for (var o in outputs) {
+      outputValues.add(o.output);
+    }
+    return outputValues;
+  }
+
+  bool isSameSpecies(Genome g, [num tolerance = 0.26]) {
+    return geneticDifference(g) < tolerance;
+  }
+
+  num geneticDifference(Genome g2) {
     var g1 = this;
     int maxConnections = max(g1.connections.length, g2.connections.length);
     if (maxConnections == 0) {
@@ -130,6 +209,23 @@ class Genome {
 
   get loops =>
       genes.whereType<Loop>();
+
+
+  Iterable<Connection> get possibleWeightChanges sync* {
+    for(var c in connections) {
+      if (c.enabled) {
+        yield c;
+      }
+    }
+  }
+
+  bool get canChangeWeight {
+    return possibleWeightChanges.isNotEmpty;
+  }
+
+  void changeWeight(Connection c, num change) {
+    c.weight += change;
+  }
 
   Link addLink(Node from, Node to) {
     if (from == to) {
@@ -201,7 +297,7 @@ class Genome {
     return possibleLoops.isNotEmpty;
   }
 
-  Hidden addNeuron(Link link) {
+  Hidden addNode(Link link) {
     if (link is Loop) {
       throw ArgumentError("Cannot add a neuron to a looped link");
     }
@@ -210,8 +306,8 @@ class Genome {
     return newNeuron;
   }
 
-  Hidden addNeuronWithLinks(Link link) {
-    var neuron = addNeuron(link);
+  Hidden addNodeWithLinks(Link link) {
+    var neuron = addNode(link);
     link.enabled = false;
     addLink(link.from, neuron);
     var toLink = addLink(neuron, link.to);
@@ -219,20 +315,20 @@ class Genome {
     return neuron;
   }
 
-  bool hasNeuron(Link link) {
+  bool hasNode(Link link) {
     return hiddens.any((n) => n.link == link);
   }
 
-  Iterable<Link> get possibleNeurons sync* {
+  Iterable<Link> get possibleNodes sync* {
     for(var l in links) {
-      if (!hasNeuron(l)) {
+      if (!hasNode(l) && l.enabled) {
         yield l;
       }
     }
   }
 
-  bool get canAddNeuron {
-    return possibleNeurons.isNotEmpty;
+  bool get canAddNode {
+    return possibleNodes.isNotEmpty;
   }
 
   factory Genome.fromJson(Map<String, dynamic> json) => _$GenomeFromJson(json);
@@ -263,17 +359,19 @@ class Genome {
         return Input.fromJson(json);
       case 'Link':
         return Link.fromJsonWithGenes(json, genes);
+      case 'Loop':
+        return Loop.fromJsonWithGenes(json, genes);
       case 'Hidden':
         return Hidden.fromJsonWithGenes(json, genes);
       default:
-        throw UnimplementedError();
+        throw UnimplementedError("Type " + json['type'] + " cannot be deserialized");
     }
   }
 
 
   static String _GeneToJson(List<Gene> genes) {
     Map<String, dynamic> geneMap = Map<String, dynamic>();
-    for(var g in genes) {
+    for (var g in genes) {
       geneMap[g.identifier] = g.toJson();
     }
     return jsonEncode(geneMap);

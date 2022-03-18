@@ -10,12 +10,12 @@ Genome _$GenomeFromJson(Map<String, dynamic> json) => Genome(
       json['inputCount'] as int,
       json['outputCount'] as int,
     )
-      ..generation = json['generation'] as int
+      ..fitness = json['fitness'] as num
       ..genes = Genome._GeneFromJson(json['genes'] as String);
 
 Map<String, dynamic> _$GenomeToJson(Genome instance) => <String, dynamic>{
       'inputCount': instance.inputCount,
       'outputCount': instance.outputCount,
-      'generation': instance.generation,
+      'fitness': instance.fitness,
       'genes': Genome._GeneToJson(instance.genes),
     };

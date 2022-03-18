@@ -10,7 +10,7 @@ void main() {
       var output = g.outputs.single;
       var link = g.addLink(input, output);
       //Act
-      var neuron = g.addNeuron(link);
+      var neuron = g.addNode(link);
       //Assert
       expect(neuron.identifier, equals("{1,2}"));
       expect(neuron.x, equals(0.75));
@@ -27,7 +27,7 @@ void main() {
       var link = g.addLink(input, output);
       link.weight = 0.8;
       //Act
-      g.addNeuronWithLinks(link);
+      g.addNodeWithLinks(link);
       //Assert
       expect(link.enabled, isFalse);
       var links = g.links.where((l) => l.enabled);
@@ -45,9 +45,9 @@ void main() {
       var input = g.inputs.single;
       var output = g.outputs.single;
       var link = g.addLink(input, output);
-      g.addNeuron(link);
+      g.addNode(link);
       //Act
-      var hasNeuron = g.hasNeuron(link);
+      var hasNeuron = g.hasNode(link);
       //Assert
       expect(hasNeuron, isTrue);
     });
@@ -59,7 +59,7 @@ void main() {
       var output = g.outputs.single;
       var link = g.addLink(input, output);
       //Act
-      var hasNeuron = g.hasNeuron(link);
+      var hasNeuron = g.hasNode(link);
       //Assert
       expect(hasNeuron, isFalse);
     });
@@ -70,10 +70,10 @@ void main() {
       var input = g.inputs.single;
       var output = g.outputs.single;
       var link = g.addLink(input, output);
-      var firstNeuron = g.addNeuron(link);
+      var firstNeuron = g.addNode(link);
       var secondLink = g.addLink(firstNeuron, output);
       //Act
-      var neuron = g.addNeuron(secondLink);
+      var neuron = g.addNode(secondLink);
       //Assert
       expect(neuron.identifier, equals("{{1,2},2}"));
       expect(neuron.x, equals(0.625));
@@ -89,7 +89,7 @@ void main() {
       var output = g.outputs.single;
       var link = g.addLink(input, output);
       //Act
-      var possibleNeurons = g.possibleNeurons;
+      var possibleNeurons = g.possibleNodes;
       //Assert
       expect(possibleNeurons.length, 1);
       expect(possibleNeurons, contains(link));
@@ -99,7 +99,7 @@ void main() {
       //Arrange
       Genome g = Genome(1,1);
       //Act
-      var canAddNeurons = g.canAddNeuron;
+      var canAddNeurons = g.canAddNode;
       //Assert
       expect(canAddNeurons, isFalse);
     });
@@ -111,7 +111,7 @@ void main() {
       var output = g.outputs.single;
       g.addLink(input, output);
       //Act
-      var canAddNeurons = g.canAddNeuron;
+      var canAddNeurons = g.canAddNode;
       //Assert
       expect(canAddNeurons, isTrue);
     });

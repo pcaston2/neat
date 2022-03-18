@@ -13,6 +13,16 @@ class Bias extends Node {
   @override
   bool get canLinkTo => false;
 
+  @override
+  num getOutput() {
+    return 1;
+  }
+
+  @override
+  void updateInput(Iterable<Connection> inputs) {
+    return;
+  }
+
   factory Bias.fromJson(Map<String, dynamic> json) => _$BiasFromJson(json);
 
   Map<String, dynamic> toJson() {

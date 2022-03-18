@@ -26,6 +26,18 @@ class NeuralNet {
     species = <int, Species>{};
   }
 
+  Generation get currentGeneration {
+    return generations.entries.last.value;
+  }
+
+  Map<Species, Genome> get fittestPerSpecies {
+    //var fittestMap = Map<Species, Genome>;
+    //for(var g in currentGeneration.genomes) {
+
+    //}
+    throw UnimplementedError();
+  }
+
   factory NeuralNet.fromJson(Map<String, dynamic> json) {
     var result = _$NeuralNetFromJson(json);
     Map<int, dynamic> genomes = json['genomes'];
@@ -58,7 +70,7 @@ class NeuralNet {
       generations[0] = gen;
       return gen;
     } else {
-      throw new UnimplementedError("There's no code for the second generation yet");
+      throw UnimplementedError("There's no code for the second generation yet");
     }
   }
 
