@@ -1,16 +1,30 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'genome.dart';
+part 'species.g.dart';
 
+@JsonSerializable(explicitToJson: true)
 class Species {
+  late Genome representative;
   late List<Genome> genomes;
-  Species() {
+
+  Species(this.representative) {
     genomes = [];
   }
 
-  Species.withRepresentative(Genome representative) {
-    genomes = [representative];
+  Genome get fittest => genomes.fold(genomes.first, (fittest, element) => fittest.fitness >= element.fitness ? fittest : element);
+
+  void add(Genome g) {
+    genomes.add(g);
   }
 
-  Genome get representative => genomes.first;
+  factory Species.fromJson(Map<String, dynamic> json) => _$SpeciesFromJson(json);
 
-  Genome get fittest => genomes.fold(genomes.first, (fittest, element) => fittest.fitness >= element.fitness ? fittest : element);
+  void clear() {
+    genomes.clear();
+  }
+
+  Map<String, dynamic> toJson() {
+    var result = _$SpeciesToJson(this);
+    return result;
+  }
 }

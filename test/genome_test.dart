@@ -172,27 +172,5 @@ void main() {
       expect(output.getOutput(), equals(0.5));
       expect(g.bias.getOutput(), equals(1));
     });
-
-    test('should evolve', () {
-      var best = Genome(1,1);
-      var current = best;
-      int bestScore = 0;
-      while (true) {
-        var currentScore = 0;
-        for (int i=0;i<10;i++) {
-          current.update();
-          var expectedToggle = i % 2 == 0;
-          var resultToggle = current.getOutputs().single > 0.5;
-          if (resultToggle == expectedToggle) {
-            currentScore++;
-          }
-        }
-        if (currentScore > bestScore) {
-          best = current;
-          bestScore = currentScore;
-        }
-        current = current.mutate();
-      }
-    });
   });
 }

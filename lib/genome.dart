@@ -340,6 +340,7 @@ class Genome {
   Map<String, dynamic> toJson() => _$GenomeToJson(this);
 
 
+
   static List<Gene> _GeneFromJson(String json) {
     Map<String, dynamic> genesMap = jsonDecode(json);
     var genes = <Gene>[];
@@ -368,7 +369,6 @@ class Genome {
     }
   }
 
-
   static String _GeneToJson(List<Gene> genes) {
     Map<String, dynamic> geneMap = Map<String, dynamic>();
     for (var g in genes) {
@@ -376,4 +376,6 @@ class Genome {
     }
     return jsonEncode(geneMap);
   }
+
+
 }

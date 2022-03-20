@@ -7,7 +7,8 @@ class NeuralNetOptions {
   num chanceToAddNode;
   num chanceToAddLoop;
   num compatibilityThreshold;
-  num sizeOfGeneration;
+  int sizeOfGeneration;
+  num crossOverPercent;
 
   NeuralNetOptions([
     this.chanceToAddLink = 0.07,
@@ -15,6 +16,7 @@ class NeuralNetOptions {
     this.chanceToAddLoop = 0.05,
     this.compatibilityThreshold = 0.26,
     this.sizeOfGeneration = 20,
+    this.crossOverPercent = 0.20,
   ]);
 
   factory NeuralNetOptions.fromJson(Map<String, dynamic> json) => _$NeuralNetOptionsFromJson(json);

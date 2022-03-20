@@ -12,9 +12,11 @@ void main() {
       mid.fitness = 1;
       var hi = Genome(0,1);
       hi.fitness = 2;
-      var species = Species();
+      var species = Species(mid);
       //Act
-      species.genomes.addAll([mid, hi, lo]);
+      species.add(lo);
+      species.add(mid);
+      species.add(hi);
       //Assert
       expect(species.representative, equals(mid));
       expect(species.fittest, equals(hi));

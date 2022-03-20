@@ -12,7 +12,8 @@ NeuralNetOptions _$NeuralNetOptionsFromJson(Map<String, dynamic> json) =>
       json['chanceToAddNode'] as num? ?? 0.03,
       json['chanceToAddLoop'] as num? ?? 0.05,
       json['compatibilityThreshold'] as num? ?? 0.26,
-      json['sizeOfGeneration'] as num? ?? 20,
+      json['sizeOfGeneration'] as int? ?? 20,
+      json['crossOverPercent'] as num? ?? 0.20,
     );
 
 Map<String, dynamic> _$NeuralNetOptionsToJson(NeuralNetOptions instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$NeuralNetOptionsToJson(NeuralNetOptions instance) =>
       'chanceToAddLoop': instance.chanceToAddLoop,
       'compatibilityThreshold': instance.compatibilityThreshold,
       'sizeOfGeneration': instance.sizeOfGeneration,
+      'crossOverPercent': instance.crossOverPercent,
     };
