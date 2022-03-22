@@ -15,6 +15,7 @@ class Link extends Connection {
 
   factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() {
     var result = _$LinkToJson(this);
     result['type'] = runtimeType.toString();

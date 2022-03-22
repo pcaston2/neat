@@ -1,4 +1,4 @@
-part of '../node.dart';
+part of 'node.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Input extends Node {
@@ -13,6 +13,7 @@ class Input extends Node {
 
   factory Input.fromJson(Map<String, dynamic> json) => _$InputFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() {
     var result = _$InputToJson(this);
     result['type'] = runtimeType.toString();

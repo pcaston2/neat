@@ -125,9 +125,13 @@ class Genome {
 
   void updateInputs() {
     for(var n in nodes) {
-      var inputs = connections.where((c) => c.enabled && c.to == n);
+      var inputs = getInputConnections(n);
       n.updateInput(inputs);
     }
+  }
+
+  Iterable<Connection> getInputConnections(Node n) {
+    return connections.where((c) => c.enabled && c.to == n);
   }
 
   void transferToOutputs() {
@@ -138,7 +142,7 @@ class Genome {
 
   void registerInputs(List<num> inputs) {
     if (inputs.length != inputCount) {
-      throw ArgumentError("Incorrect number of inputs passed, expecting $inputCount but received $inputs.length", "inputs");
+      throw ArgumentError("Incorrect number of inputs passed, expecting $inputCount but received  ${inputs.length}", "inputs");
     }
     var genomeInputs = this.inputs.toList();
     for (int i = 0;i<inputs.length;i++) {

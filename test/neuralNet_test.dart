@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:test/test.dart';
 import 'package:neat/neuralNet.dart';
 
@@ -28,14 +30,48 @@ void main() {
       //Assert
     });
 
-    test('should generate 20 generations', () {
+    test('should evolve', () {
       //Arrange
       var nn = NeuralNet(0, 1);
+      nn.createNextGeneration();
+      var generationId = 1;
+      num currentFitness = 0;
       //Act
-      for (int i=0;i<20;i++) {
+      while (true) {
+        for (var g in nn.currentGeneration) {
+          num fitness = 0;
+          for (int i=0;i<10;i++) {
+            var target = i % 2;
+            g.update();
+            var result = g.getOutputs().toList().single;
+            var diff = (target - result).abs();
+            var fitnessChange = max(0,1 - diff);
+            fitness = fitness + fitnessChange;
+          }
+          g.fitness = fitness;
+        }
         nn.createNextGeneration();
+        generationId++;
+        if (nn.fittest.fitness > currentFitness) {
+          currentFitness = nn.fittest.fitness;
+          var fittest = nn.fittest;
+          var outputs = <num>[];
+          for (int i=0;i<10;i++) {
+            fittest.update();
+            var result = fittest.getOutputs().toList().single;
+            outputs.add(result);
+          }
+
+          print('Generation: $generationId');
+          print('Fitness: $currentFitness');
+          print('Species Count: ${nn.species.length}');
+          print('Genes: ${nn.species.values.first.genomes.first.genes.length}');
+          print('Outputs: $outputs');
+        }
+        if (currentFitness == 10) {
+          break;
+        }
       }
-      //Assert
     });
   });
 }

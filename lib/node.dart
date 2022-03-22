@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'gene.dart';
 import 'connection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'activationFunction.dart';
 
 part 'bias.dart';
 part 'output.dart';
@@ -43,9 +42,9 @@ abstract class Node implements Gene {
       var node = i.from;
       var weight = i.weight;
       var output = node.getOutput();
-      sum = weight * output;
+      sum += weight * output;
     }
-    input = 1/(1+exp(-sum));
+    input = ActivationFunction.activationFunction(sum);
   }
 
   num getOutput() {

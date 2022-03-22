@@ -25,6 +25,7 @@ class Bias extends Node {
 
   factory Bias.fromJson(Map<String, dynamic> json) => _$BiasFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() {
     var result = _$BiasToJson(this);
     result['type'] = runtimeType.toString();

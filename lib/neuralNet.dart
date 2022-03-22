@@ -22,11 +22,31 @@ class NeuralNet {
     species = <int, Species>{};
   }
 
+  List<Genome> get currentGeneration {
+    var generation = <Genome>[];
+    for (var s in species.entries) {
+      for (var g in s.value.genomes) {
+        generation.add(g);
+      }
+    }
+    return generation;
+  }
+
+  Genome get fittest {
+    Genome fittest = species.entries.first.value.fittest;
+    for (var s in species.entries) {
+      if (s.value.fittest.fitness > fittest.fitness) {
+        fittest = s.value.fittest;
+      }
+    }
+    return fittest;
+  }
+
   void createNextGeneration() {
     if (species.isEmpty) {
       var progenitor = Genome(inputs, outputs);
       for (int i=0;i<options.sizeOfGeneration;i++) {
-        var child = Genome.clone(progenitor);
+        var child = Genome.mutate(progenitor);
         add(child);
       }
     } else {
@@ -47,13 +67,14 @@ class NeuralNet {
         var remaining = Map<Genome, num>.from(fitMap);
         remaining.removeWhere((key, value) => key == firstChosen);
         var secondChosen = fitMap.weightedChoice();
-        var child = Genome.crossover(firstChosen, secondChosen);
+        var child = Genome.mutate(Genome.crossover(firstChosen, secondChosen));
         add(child);
         length++;
       }
       for (int i=length;i<options.sizeOfGeneration;i++) {
         var chosen = fitMap.weightedChoice();
-        add(chosen);
+        var child = Genome.mutate(chosen);
+        add(child);
       }
       species.removeWhere((key, value) => value.genomes.isEmpty);
     }

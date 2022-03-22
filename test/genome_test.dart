@@ -161,16 +161,53 @@ void main() {
       expect(g.bias.getOutput(), equals(1));
     });
 
+    test('should have input for output', () {
+      //Arrange
+      var g = Genome(0,1);
+      var output = g.outputs.single;
+      var link = g.addLink(g.bias, output);
+      //Act
+      var inputConnections = g.getInputConnections(output);
+      //Assert
+      expect(inputConnections, isNotEmpty);
+      expect(link, equals(inputConnections.single));
+    });
+
     test('should update', () {
       //Arrange
       var g = Genome(0,1);
       var output = g.outputs.single;
-      g.addLink(output, g.bias);
+      g.addLink(g.bias, output);
       //Act
       g.update();
       //Assert
-      expect(output.getOutput(), equals(0.5));
+      expect(output.getOutput(), equals(1));
       expect(g.bias.getOutput(), equals(1));
+    });
+
+    test('should count', () {
+      //Arrange
+      var g = Genome(0,1);
+      var output = g.outputs.single;
+      var link = g.addLink(g.bias, output);
+      link.weight = 1;
+      g.addLoop(g.outputs.single);
+      //Act
+      for (int i=0;i<10;i++) {
+        g.update();
+        print("-----------");
+        print("Iteration $i");
+        print("Output: ${g.getOutputs().single}");
+        print("-----------");
+        for (var n in g.nodes) {
+          print("ID: ${n.identifier}");
+          print("Type: ${n.runtimeType}");
+          print("Inputs: ${n.input}");
+          print("Outputs: ${n.getOutput()}");
+        }
+        //Assert
+        expect(g.getOutputs().single, equals(i+1));
+      }
     });
   });
 }

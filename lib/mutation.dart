@@ -1,10 +1,9 @@
-
-
 import 'dart:math';
 
 import 'connection.dart';
 import 'genome.dart';
 import 'node.dart';
+import 'activationFunction.dart';
 
 abstract class Mutation {
   late num chance;
@@ -83,7 +82,22 @@ class WeightMutation extends Mutation {
 
   void applyMutation(Genome g, Connection c) {
     var r = Random();
-    g.changeWeight(c, r.nextDouble() * maximumChange);
+    g.changeWeight(c, (maximumChange / 2) - (r.nextDouble() * maximumChange));
+  }
+}
+
+extension NodeWeighting<T> on List<T> {
+  Map<T, num> toWeighted() {
+    if (T is Node) {
+      var nodes = cast<Node>();
+      var weightedMap = <Node, num>{};
+      for (var n in nodes) {
+        weightedMap[n] = ActivationFunction.sigmoid(-n.depth);
+      }
+      return weightedMap.cast<T, num>();
+    } else {
+      throw ArgumentError(T.toString() + " is not a subtype of Node");
+    }
   }
 }
 
