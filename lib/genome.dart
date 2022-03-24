@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:neat/node.dart';
 import 'package:neat/weightedRandomChoice.dart';
-
 import 'gene.dart';
 import 'connection.dart';
 import 'mutation.dart';
@@ -59,7 +58,7 @@ class Genome {
   }
 
   Map<Mutation, num> getPossibleMutations() {
-    var mutations = Map<Mutation, num>();
+    var mutations = <Mutation, num>{};
     if (canAddNode) {
       var mutation = NodeMutation();
       mutations[mutation] = mutation.chance;
@@ -74,6 +73,14 @@ class Genome {
     }
     if (canChangeWeight) {
       var mutation = WeightMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (canChangeActivation) {
+      var mutation = ActivationMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (canResetActivation) {
+      var mutation = ResetWeightMutation();
       mutations[mutation] = mutation.chance;
     }
     if (mutations.isEmpty) {
@@ -119,6 +126,7 @@ class Genome {
   void clear() {
     for (var n in nodes) {
       n.input = 0;
+      n.output = 0;
     }
   }
 
@@ -223,13 +231,23 @@ class Genome {
     }
   }
 
-  bool get canChangeWeight {
-    return possibleWeightChanges.isNotEmpty;
+  bool get canChangeWeight => possibleWeightChanges.isNotEmpty;
+
+  Iterable<Hidden> get possibleActivationChanges sync* {
+    for (var h in hiddens) {
+      yield h;
+    }
   }
+
+  bool get canChangeActivation => possibleActivationChanges.isNotEmpty;
 
   void changeWeight(Connection c, num change) {
     c.weight += change;
   }
+
+
+  bool get canResetActivation => possibleWeightChanges.isNotEmpty;
+
 
   Link addLink(Node from, Node to) {
     if (from == to) {
@@ -240,6 +258,7 @@ class Genome {
       throw ArgumentError("This link already exists");
     }
     var newLink = Link(from, to);
+    newLink.weight = Random().nextDouble() * 2 -1;
     genes.add(newLink);
     return newLink;
   }
@@ -277,6 +296,7 @@ class Genome {
       throw ArgumentError("Cannot have a loop on an input neuron");
     }
     var newLoop = Loop.around(loop);
+    newLoop.weight = Random().nextDouble() * 2 -1;
     genes.add(newLoop);
     return newLoop;
   }
@@ -313,7 +333,8 @@ class Genome {
   Hidden addNodeWithLinks(Link link) {
     var neuron = addNode(link);
     link.enabled = false;
-    addLink(link.from, neuron);
+    var fromLink = addLink(link.from, neuron);
+    fromLink.weight = 1;
     var toLink = addLink(neuron, link.to);
     toLink.weight = link.weight;
     return neuron;
@@ -342,8 +363,6 @@ class Genome {
   }
 
   Map<String, dynamic> toJson() => _$GenomeToJson(this);
-
-
 
   static List<Gene> _GeneFromJson(String json) {
     Map<String, dynamic> genesMap = jsonDecode(json);

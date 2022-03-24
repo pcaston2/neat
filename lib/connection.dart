@@ -12,7 +12,7 @@ abstract class Connection extends Gene {
   Node from;
   @JsonKey(fromJson: _NeuronFromJson, toJson: _NeuronToJson)
   Node to;
-  num weight = 1;
+  num weight = 0;
   bool enabled = true;
 
   Connection(this.from, this.to) {

@@ -1,3 +1,4 @@
+import 'package:neat/activation.dart';
 import 'package:neat/mutation.dart';
 import 'package:test/test.dart';
 import 'package:neat/genome.dart';
@@ -56,6 +57,7 @@ void main() {
       var bias = g1.bias;
       var output = g1.outputs.first;
       var link = g1.addLink(bias, output);
+      link.weight = 1.00;
       var g2 = Genome.clone(g1);
       link.weight = 1.20;
       //Act
@@ -142,10 +144,12 @@ void main() {
       //Arrange
       var g = Genome(0,1);
       var output = g.outputs.single;
+      var l = g.addLink(g.bias, output);
+      l.weight = 1;
       //Act
       g.updateInputs();
       //Assert
-      expect(output.input, equals(0.5));
+      expect(output.input, equals(1));
       expect(g.bias.input, equals(0));
     });
 
@@ -177,7 +181,8 @@ void main() {
       //Arrange
       var g = Genome(0,1);
       var output = g.outputs.single;
-      g.addLink(g.bias, output);
+      var link = g.addLink(g.bias, output);
+      link.weight = 1.0;
       //Act
       g.update();
       //Assert
@@ -191,22 +196,26 @@ void main() {
       var output = g.outputs.single;
       var link = g.addLink(g.bias, output);
       link.weight = 1;
-      g.addLoop(g.outputs.single);
+      var h = g.addNodeWithLinks(link);
+      h.activationFunction = ReLU();
+      var loop = g.addLoop(output);
+      loop.weight = 1.0;
       //Act
       for (int i=0;i<10;i++) {
         g.update();
-        print("-----------");
-        print("Iteration $i");
-        print("Output: ${g.getOutputs().single}");
-        print("-----------");
-        for (var n in g.nodes) {
-          print("ID: ${n.identifier}");
-          print("Type: ${n.runtimeType}");
-          print("Inputs: ${n.input}");
-          print("Outputs: ${n.getOutput()}");
-        }
+        // print("-----------");
+        //print("Iteration $i");
+        //print("Output: ${g.getOutputs().single}");
+        // print("-----------");
+        // for (var n in g.nodes) {
+        //   print("ID: ${n.identifier}");
+        //   print("Type: ${n.runtimeType}");
+        //   print("Inputs: ${n.input}");
+        //   print("Outputs: ${n.getOutput()}");
+        // }
+
         //Assert
-        expect(g.getOutputs().single, equals(i+1));
+        expect(g.getOutputs().single, equals(i));
       }
     });
   });

@@ -14,6 +14,11 @@ class Input extends Node {
   factory Input.fromJson(Map<String, dynamic> json) => _$InputFromJson(json);
 
   @override
+  void updateInput(Iterable<Connection> inputs) {
+    return;
+  }
+
+  @override
   Map<String, dynamic> toJson() {
     var result = _$InputToJson(this);
     result['type'] = runtimeType.toString();

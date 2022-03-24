@@ -1,7 +1,7 @@
 import 'gene.dart';
 import 'connection.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'activationFunction.dart';
+import 'activation.dart';
 
 part 'bias.dart';
 part 'output.dart';
@@ -14,7 +14,6 @@ abstract class Node implements Gene {
   num y = 0;
 
   bool get canLoop;
-
   bool get canLinkTo;
 
   @JsonKey(ignore: true)
@@ -36,16 +35,7 @@ abstract class Node implements Gene {
     depth = 0;
   }
 
-  void updateInput(Iterable<Connection> inputs) {
-    num sum = 0;
-    for(var i in inputs) {
-      var node = i.from;
-      var weight = i.weight;
-      var output = node.getOutput();
-      sum += weight * output;
-    }
-    input = ActivationFunction.activationFunction(sum);
-  }
+  void updateInput(Iterable<Connection> inputs);
 
   num getOutput() {
     return output;

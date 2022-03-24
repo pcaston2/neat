@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neat/activationFunction.dart';
+import 'package:neat/activation.dart';
 
 void main() {
   group('Activation Function', ()
@@ -8,7 +8,7 @@ void main() {
       //Arrange
       var input = -1;
       //Act
-      var output = ActivationFunction.sigmoid(input);
+      var output = Activation.sigmoid(input);
       //Assert
       expect(output, lessThan(0.5));
     });
@@ -17,7 +17,7 @@ void main() {
       //Arrange
       var input = 1;
       //Act
-      var output = ActivationFunction.sigmoid(input);
+      var output = Activation.sigmoid(input);
       //Assert
       expect(output, greaterThan(0.5));
     });
@@ -26,7 +26,7 @@ void main() {
       //Arrange
       var input = 0;
       //Act
-      var output = ActivationFunction.sigmoid(input);
+      var output = Activation.sigmoid(input);
       //Assert
       expect(output, equals(0.5));
     });

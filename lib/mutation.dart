@@ -3,7 +3,7 @@ import 'dart:math';
 import 'connection.dart';
 import 'genome.dart';
 import 'node.dart';
-import 'activationFunction.dart';
+import 'activation.dart';
 
 abstract class Mutation {
   late num chance;
@@ -86,13 +86,50 @@ class WeightMutation extends Mutation {
   }
 }
 
+class ResetWeightMutation extends Mutation {
+  @override
+  late num chance;
+
+  ResetWeightMutation([this.chance = 0.10]);
+
+  @override
+  void mutate(Genome g) {
+    var possibleWeightChanges = g.possibleWeightChanges.toList();
+    possibleWeightChanges.shuffle();
+    var chosenWeightChange = possibleWeightChanges.first;
+    applyMutation(g, chosenWeightChange);
+  }
+
+  void applyMutation(Genome g, Connection c) {
+    c.weight = Random().nextDouble() * 2 - 1;
+  }
+}
+
+class ActivationMutation extends Mutation {
+  @override
+  late num chance;
+  ActivationMutation([this.chance = 0.10]);
+
+  @override
+  void mutate(Genome g) {
+    var possibleActivationChanges = g.possibleActivationChanges.toList();
+    possibleActivationChanges.shuffle();
+    var chosenActivationChange = possibleActivationChanges.first;
+    applyMutation(g, chosenActivationChange);
+  }
+
+  void applyMutation(Genome g, Hidden h) {
+    h.activationFunction = Activation.random();
+  }
+}
+
 extension NodeWeighting<T> on List<T> {
   Map<T, num> toWeighted() {
     if (T is Node) {
       var nodes = cast<Node>();
       var weightedMap = <Node, num>{};
       for (var n in nodes) {
-        weightedMap[n] = ActivationFunction.sigmoid(-n.depth);
+        weightedMap[n] = Activation.sigmoid(-n.depth);
       }
       return weightedMap.cast<T, num>();
     } else {
