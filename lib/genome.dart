@@ -251,8 +251,7 @@ class Genome {
 
   Link addLink(Node from, Node to) {
     if (from == to) {
-      throw ArgumentError(
-          "Looped Links should be created by calling addLoop");
+      throw ArgumentError("Looped Links should be created by calling addLoop");
     }
     if (hasLink(from, to)) {
       throw ArgumentError("This link already exists");
