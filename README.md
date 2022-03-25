@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-NeuroEvolution of Augmenting Topologies for Flutter! Create and evolve a neural net for solving all (or at least some) of life's hard problems.
+NeuroEvolution of Augmenting Topologies Expressed in Dart! Create and evolve a neural net for solving all (or at least some) of life's hard problems.
 
 ## Features
 
