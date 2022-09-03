@@ -1,6 +1,6 @@
 name: neated
 description: NeuroEvolution of Augmenting Topologies Expressed in Dart!
-version: 1.0.0
+version: 1.0.1
 homepage: "https://github.com/pcaston2/neat"
 
 environment:
