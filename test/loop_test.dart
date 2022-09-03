@@ -1,4 +1,4 @@
-import 'package:neat/genome.dart';
+import 'package:neated/genome.dart';
 import 'package:test/test.dart';
 
 void main() {

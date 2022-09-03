@@ -1,6 +1,6 @@
-import 'package:neat/activation.dart';
+import 'package:neated/activation.dart';
 import 'package:test/test.dart';
-import 'package:neat/neuralNet.dart';
+import 'package:neated/neuralNet.dart';
 
 void main() {
   group('Neural Net', () {

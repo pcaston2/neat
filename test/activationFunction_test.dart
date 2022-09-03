@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neat/activation.dart';
+import 'package:neated/activation.dart';
 
 void main() {
   group('Activation Function', ()

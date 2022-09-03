@@ -1,7 +1,7 @@
-import 'package:neat/genome.dart';
-import 'package:neat/neuralNet.dart';
-import 'package:neat/node.dart';
-import 'package:neat/connection.dart';
+import 'package:neated/genome.dart';
+import 'package:neated/neuralNet.dart';
+import 'package:neated/node.dart';
+import 'package:neated/connection.dart';
 import 'package:test/test.dart';
 
 void main() {

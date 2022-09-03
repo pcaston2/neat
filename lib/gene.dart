@@ -1,5 +1,3 @@
-library neat;
-
 abstract class Gene {
   String identifier = "";
   late int depth;

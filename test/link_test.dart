@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neat/genome.dart';
+import 'package:neated/genome.dart';
 
 void main() {
   group('Link', () {

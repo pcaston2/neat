@@ -1,7 +1,7 @@
-import 'package:neat/activation.dart';
-import 'package:neat/mutation.dart';
+import 'package:neated/activation.dart';
+import 'package:neated/mutation.dart';
 import 'package:test/test.dart';
-import 'package:neat/genome.dart';
+import 'package:neated/genome.dart';
 
 void main() {
 

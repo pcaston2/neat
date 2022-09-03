@@ -1,8 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:neat/neuralNetOptions.dart';
-import 'package:neat/species.dart';
-import 'package:neat/weightedRandomChoice.dart';
+import 'neuralNetOptions.dart';
 import 'species.dart';
+import 'weightedRandomChoice.dart';
 import 'genome.dart';
 part 'neuralNet.g.dart';
 

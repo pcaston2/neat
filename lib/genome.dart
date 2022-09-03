@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:neat/node.dart';
-import 'package:neat/weightedRandomChoice.dart';
+import 'node.dart';
+import 'weightedRandomChoice.dart';
 import 'gene.dart';
 import 'connection.dart';
 import 'mutation.dart';
@@ -50,7 +50,8 @@ class Genome {
     } else {
       for (int i = 0; i < allOutputs.length; i++) {
         var current = allOutputs[i];
-        current.y = i / (allInputs.length - 1);
+        current.y = 1;
+        current.x = i / (allOutputs.length - 1);
       }
     }
     genes.addAll(allInputs);

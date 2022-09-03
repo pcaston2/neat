@@ -1,5 +1,5 @@
 
-import 'package:neat/weightedRandomChoice.dart';
+import 'package:neated/weightedRandomChoice.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 

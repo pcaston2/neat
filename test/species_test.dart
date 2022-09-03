@@ -1,6 +1,6 @@
-import 'package:neat/genome.dart';
+import 'package:neated/genome.dart';
 import 'package:test/test.dart';
-import 'package:neat/species.dart';
+import 'package:neated/species.dart';
 
 void main() {
   group('Species', () {

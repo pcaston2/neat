@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:neat/node.dart';
 import 'gene.dart';
 import 'node.dart';
 import 'dart:math';
