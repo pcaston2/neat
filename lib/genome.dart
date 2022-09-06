@@ -273,6 +273,9 @@ class Genome {
         continue;
       }
       for (var from in nodes) {
+        if (!from.canLinkFrom) {
+          continue;
+        }
         if (from == to) {
           continue;
         }

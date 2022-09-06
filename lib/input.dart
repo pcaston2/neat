@@ -11,6 +11,9 @@ class Input extends Node {
   @override
   bool get canLinkTo => false;
 
+  @override
+  bool get canLinkFrom => true;
+
   factory Input.fromJson(Map<String, dynamic> json) => _$InputFromJson(json);
 
   @override

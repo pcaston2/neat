@@ -1,3 +1,4 @@
+import 'package:neated/node.dart';
 import 'package:test/test.dart';
 import 'package:neated/genome.dart';
 
@@ -76,6 +77,15 @@ void main() {
       var possibleLinks = g.possibleLinks;
       //Assert
       expect(possibleLinks.where((l) => l.from == bias && l.to == output),isEmpty);
+    });
+
+    test('should not find possible between outputs',() {
+      //Arrange
+      Genome g = Genome(0,2);
+      //Act
+      var possibleLinks = g.possibleLinks;
+      //Assert
+      expect(possibleLinks.where((l) => l.from is Output),isEmpty);
     });
 
     test('should be able to add link', () {

@@ -15,6 +15,7 @@ abstract class Node implements Gene {
 
   bool get canLoop;
   bool get canLinkTo;
+  bool get canLinkFrom;
 
   @JsonKey(ignore: true)
   num input = 0;

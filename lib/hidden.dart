@@ -19,6 +19,9 @@ class Hidden extends Node {
   @override
   bool get canLinkTo => true;
 
+  @override
+  bool get canLinkFrom => true;
+
   @JsonKey(ignore: true)
   late Activation activationFunction;
 

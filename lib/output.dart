@@ -12,6 +12,9 @@ class Output extends Node {
   bool get canLinkTo => true;
 
   @override
+  bool get canLinkFrom => false;
+
+  @override
   void updateInput(Iterable<Connection> inputs) {
     num sum = 0;
     for(var i in inputs) {

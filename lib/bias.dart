@@ -14,6 +14,9 @@ class Bias extends Node {
   bool get canLinkTo => false;
 
   @override
+  bool get canLinkFrom => true;
+
+  @override
   num getOutput() {
     return 1;
   }
