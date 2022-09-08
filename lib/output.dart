@@ -6,7 +6,7 @@ class Output extends Node {
   Output.index(int innovationIdentifier) : super.index(innovationIdentifier);
 
   @override
-  bool get canLoop => true;
+  bool get canLoop => false;
 
   @override
   bool get canLinkTo => true;

@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
 
+import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'node.dart';
 import 'weightedRandomChoice.dart';
@@ -82,6 +81,10 @@ class Genome {
     }
     if (canResetActivation) {
       var mutation = ResetWeightMutation();
+      mutations[mutation] = mutation.chance;
+    }
+    if (hasDormantConnections) {
+      var mutation = DormantMutation();
       mutations[mutation] = mutation.chance;
     }
     if (mutations.isEmpty) {
@@ -234,6 +237,17 @@ class Genome {
 
   bool get canChangeWeight => possibleWeightChanges.isNotEmpty;
 
+  Iterable<Connection> get possibleDormantConnections sync* {
+    for (var c in connections) {
+      if (!c.enabled) {
+        yield c;
+      }
+    }
+  }
+
+  bool get hasDormantConnections => possibleDormantConnections.isNotEmpty;
+
+
   Iterable<Hidden> get possibleActivationChanges sync* {
     for (var h in hiddens) {
       yield h;
@@ -367,8 +381,7 @@ class Genome {
 
   Map<String, dynamic> toJson() => _$GenomeToJson(this);
 
-  static List<Gene> _GeneFromJson(String json) {
-    Map<String, dynamic> genesMap = jsonDecode(json);
+  static List<Gene> _GeneFromJson(Map<String, dynamic> genesMap) {
     var genes = <Gene>[];
     for (var g in genesMap.values) {
       genes.add(geneFromJson(g, genes));
@@ -395,12 +408,12 @@ class Genome {
     }
   }
 
-  static String _GeneToJson(List<Gene> genes) {
+  static Map<String, dynamic> _GeneToJson(List<Gene> genes) {
     Map<String, dynamic> geneMap = Map<String, dynamic>();
     for (var g in genes) {
       geneMap[g.identifier] = g.toJson();
     }
-    return jsonEncode(geneMap);
+    return geneMap;
   }
 
 

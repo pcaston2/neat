@@ -112,7 +112,7 @@ void main() {
       var possibleMutations = g.getPossibleMutations().keys;
       //Assert
       expect(possibleMutations.whereType<LinkMutation>(), isNotEmpty);
-      expect(possibleMutations.whereType<LoopMutation>(), isNotEmpty);
+      expect(possibleMutations.whereType<LoopMutation>(), isEmpty);
       expect(possibleMutations.whereType<NodeMutation>(), isEmpty);
       expect(possibleMutations.whereType<WeightMutation>(), isEmpty);
     });
@@ -120,7 +120,9 @@ void main() {
     test('should have more mutations', () {
       //Arrange
       Genome g = Genome(1,1);
-      g.addLink(g.bias, g.outputs.first);
+      var link = g.addLink(g.bias, g.outputs.first);
+      g.addNode(link);
+      g.addLink(g.inputs.first, g.outputs.first);
       //Act
       var possibleMutations = g.getPossibleMutations().keys;
       //Assert

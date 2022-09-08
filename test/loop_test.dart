@@ -42,16 +42,21 @@ void main() {
       //Arrange
       Genome g = Genome(0, 1);
       var output = g.outputs.single;
+      var bias = g.bias;
+      var link = g.addLink(output, bias);
+      var hidden = g.addNode(link);
       //Act
-      var possibleLinks = g.possibleLoops;
+      var possibleLoop = g.possibleLoops;
       //Assert
-      expect(possibleLinks, hasLength(1));
-      expect(possibleLinks,contains(output));
+      expect(possibleLoop, hasLength(1));
+      expect(possibleLoop,contains(hidden));
     });
 
     test('should be able to add loop', () {
       //Arrange
       Genome g = Genome(0, 1);
+      var link = g.addLink(g.bias, g.outputs.first);
+      g.addNode(link);
       //Act
       var canAddLoops = g.canAddLoop;
       //Assert

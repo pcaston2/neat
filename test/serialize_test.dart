@@ -94,7 +94,7 @@ void main() {
     //Assert
     expect(output.identifier, equals("3"));
     expect(output.depth, equals(4));
-    expect(output.canLoop, isTrue);
+    expect(output.canLoop, isFalse);
     expect(json['type'], equals('Output'));
   });
 

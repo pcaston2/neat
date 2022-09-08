@@ -105,6 +105,24 @@ class ResetWeightMutation extends Mutation {
   }
 }
 
+class DormantMutation extends Mutation {
+  @override
+  late num chance;
+  DormantMutation([this.chance = 0.02]);
+
+  @override
+  void mutate(Genome g) {
+    var possibleDormantConnections = g.possibleDormantConnections.toList();
+    possibleDormantConnections.shuffle();
+    var chosenDormantConnection = possibleDormantConnections.first;
+    applyMutation(g, chosenDormantConnection);
+  }
+
+  void applyMutation(Genome g, Connection c) {
+    c.enabled = true;
+  }
+}
+
 class ActivationMutation extends Mutation {
   @override
   late num chance;
